@@ -1,11 +1,11 @@
 import React from "react";
-import SignIn from "../../Components/Signin/Signin";
+import Signin from "../../Components/Signin/Signin";
 
 class SigninPage extends React.Component {
   render() {
     return (
       <div>
-        <SignIn />
+        <Signin />
       </div>
     );
   }

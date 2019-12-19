@@ -12,10 +12,25 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { Formik, Field, Form , /*ErrorMessage */ } from "formik";
+import { Formik, Field, Form /* ErrorMessage */ } from "formik";
 import { TextField } from "formik-material-ui";
 import * as Yup from "yup";
 import "./Signin.css";
+
+import {
+  createMuiTheme,
+  ThemeProvider,
+  jssPreset,
+  StylesProvider
+} from "@material-ui/core/styles";
+import rtl from "jss-rtl";
+import { create } from "jss";
+
+const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
+
+const theme = createMuiTheme({
+  direction: "rtl" // Both here and <body dir="rtl">
+});
 
 function Copyright() {
   return (
@@ -52,89 +67,103 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function SignIn() {
+export default function Signin(props) {
   const classes = useStyles();
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Formik
-          initialValues={{
-            username: "",
-            password: ""
-          }}
-          validationSchema={Yup.object().shape({
-            username: Yup.string().required(
-              "نام کاربری نمی تواند خالی باشد"
-            ),
+      <StylesProvider jss={jss}>
+        <ThemeProvider theme={theme}>
+          <div className={classes.paper} dir="rtl">
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography
+              component="h1"
+              variant="h5"
+              style={{ fontFamily: "Vazir" }}
+            >
+              ورود به سامانه
+            </Typography>
+            <Formik
+              initialValues={{
+                username: "",
+                password: ""
+              }}
+              validationSchema={Yup.object().shape({
+                username: Yup.string().required(
+                  "نام کاربری نمی تواند خالی باشد"
+                ),
 
-            password: Yup.string()
-              .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد")
-              .required("رمز عبور نمی‌تواند خالی باشد")
-          })}
-          onSubmit=""
-          render={({ errors, touched, validateField, validateForm }) => (
-            <Form className={classes.form} noValidate>
-              <Field
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Username"
-                name="username"
-                // autoComplete="email"
-                autoFocus
-                component={TextField}
-              />
-              <Field
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                component={TextField}
-              />
-              {/* <FormControlLabel
+                password: Yup.string()
+                  .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد")
+                  .required("رمز عبور نمی‌تواند خالی باشد")
+              })}
+              onSubmit={e => {
+                
+              }}
+              render={({ errors, touched, validateField, validateForm }) => (
+                <Form className={classes.form} noValidate>
+                  <Field
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="username"
+                    label="نام کاربری"
+                    name="username"
+                    // autoComplete="email"
+                    // autoFocus
+                    component={TextField}
+                  />
+                  <Field
+                    variant="outlined"
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="password"
+                    label="رمز عبور"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    component={TextField}
+                  />
+                  {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           /> */}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign In
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
-                {/* <Grid item>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    Sign In
+                  </Button>
+                  <Grid container>
+                    <Grid item xs>
+                      <Link
+                        href="#"
+                        variant="body2"
+                        style={{ fontFamily: "Vazir" }}
+                      >
+                        بازیابی رمز عبور
+                      </Link>
+                    </Grid>
+                    {/* <Grid item>
               <Link href="#" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid> */}
-              </Grid>
-            </Form>
-          )}
-        />
-      </div>
+                  </Grid>
+                </Form>
+              )}
+            />
+          </div>
+        </ThemeProvider>
+      </StylesProvider>
       <Box mt={8}>
         <Copyright />
       </Box>
