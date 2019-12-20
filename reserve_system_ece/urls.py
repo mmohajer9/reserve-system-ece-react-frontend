@@ -22,10 +22,10 @@ from rest_framework.documentation import include_docs_urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('/api/reserve-system/' , include('reserve_app.urls' , namespace='reserve-system-api')),
+    path('api/reserve-system/' , include('reserve_app.urls' , namespace='reserve-system-api')),
     path('signin/oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path('docs/' , include_docs_urls(title= 'Reserve System Documentation')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 

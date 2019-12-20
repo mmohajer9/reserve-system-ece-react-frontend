@@ -6,4 +6,9 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 # Register your models here.
 
 
-# admin.site.register(model_name)
+admin.site.register(University)
+admin.site.register(Department)
+admin.site.register(Place)
+admin.site.register(Member)
+admin.site.register(Reservation)
+admin.site.register(DateTimeSlot)
