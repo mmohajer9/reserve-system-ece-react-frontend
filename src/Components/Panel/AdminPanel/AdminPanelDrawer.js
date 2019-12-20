@@ -1,0 +1,285 @@
+import React from "react";
+import clsx from "clsx";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import List from "@material-ui/core/List";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import EditIcon from "@material-ui/icons/Edit";
+import AddRoundedIcon from "@material-ui/icons/AddRounded";
+import EventAvailableRoundedIcon from "@material-ui/icons/EventAvailableRounded";
+import SchoolRoundedIcon from "@material-ui/icons/SchoolRounded";
+import AccountBalanceRoundedIcon from "@material-ui/icons/AccountBalanceRounded";
+import HomeIcon from "@material-ui/icons/Home";
+import EventNoteIcon from "@material-ui/icons/EventNote";
+import { withRouter } from "react-router";
+import { Route } from "react-router-dom";
+import "./AdminPanelDrawer.css";
+import AdminPanelHome from "./AdminPanelHome";
+const drawerWidth = 240;
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: "flex",
+    fontFamily: "Vazir"
+  },
+  appBar: {
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  appBarShift: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+    marginRight: drawerWidth
+  },
+  title: {
+    // flexGrow: 1, //if uncomment -> title will go to the left most
+    fontFamily: "Vazir"
+  },
+  hide: {
+    display: "none"
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0
+  },
+  drawerPaper: {
+    width: drawerWidth
+  },
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-start"
+  },
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    }),
+    marginRight: -drawerWidth
+  },
+  contentShift: {
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+    marginRight: 0
+  },
+  toolbar: {
+    justifyContent: "space-between"
+  }
+}));
+
+function AdminPanelDrawer(props) {
+  const classes = useStyles();
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
+
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <div className={classes.root}>
+      <CssBaseline />
+      <AppBar
+        position="fixed"
+        className={clsx(classes.appBar, {
+          [classes.appBarShift]: open
+        })}
+      >
+        <Toolbar
+          className={classes.toolbar}
+          style={{ background: "linear-gradient(to right , #42cca2, #215d9c)" }}
+        >
+          <Typography variant="h6" noWrap className={classes.title}>
+            {props.location.pathname === "/panel/admin/reserve" ||
+            props.location.pathname === "/panel/admin/reserve/"
+              ? "رزرو"
+              : props.location.pathname === "/panel/admin/reservations" ||
+                props.location.pathname === "/panel/admin/reservations/"
+              ? "رزرو های من"
+              : props.location.pathname === "/panel/admin/select-university" ||
+                props.location.pathname === "/panel/admin/select-university/"
+              ? "انتخاب دانشگاه"
+              : props.location.pathname === "/panel/admin/select-department" ||
+                props.location.pathname === "/panel/admin/select-department/"
+              ? "انتخاب دانشکده"
+              : props.location.pathname === "/panel/admin" ||
+                props.location.pathname === "/panel/admin/"
+              ? "خانه"
+              : props.location.pathname === "/panel/admin/set-reserve-slots" ||
+                props.location.pathname === "/panel/admin/set-reserve-slots/"
+              ? "تعیین اسلات های رزرو"
+              : null}
+          </Typography>
+          <Typography variant="h6" noWrap className={classes.title}>
+            پنل مدیریت
+          </Typography>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="end"
+            onClick={handleDrawerOpen}
+            className={clsx(open && classes.hide)}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: open
+        })}
+      >
+        <div className={classes.drawerHeader} />
+        <Route exact path="/panel/admin/reserve">
+          <Typography paragraph>THIS IS Reserve</Typography>
+        </Route>
+        <Route exact path="/panel/admin/reservations">
+          <Typography paragraph>THIS IS My Reservatons</Typography>
+        </Route>
+        <Route exact path="/panel/admin/select-university">
+          <Typography paragraph>THIS IS Select University</Typography>
+        </Route>
+        <Route exact path="/panel/admin/select-department">
+          <Typography paragraph>THIS IS Select Department</Typography>
+        </Route>
+        <Route exact path="/panel/admin/set-reserve-slots">
+          <Typography paragraph>THIS IS Select set reserve slot</Typography>
+        </Route>
+        <Route exact path="/panel/admin/">
+          <AdminPanelHome />
+        </Route>
+      </main>
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="right"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper
+        }}
+      >
+        <div
+          className={classes.drawerHeader}
+          style={{ background: "linear-gradient(to right , #fdfbfb, #ebedee)" }}
+        >
+          <IconButton color="primary" onClick={handleDrawerClose}>
+            {theme.direction === "rtl" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+          <Typography
+            variant="subtitle1"
+            color="primary"
+            className={classes.title}
+          >
+            محمد مهدی مهاجر
+          </Typography>
+          <IconButton color="secondary">
+            <ExitToAppIcon />
+          </IconButton>
+          <IconButton style={{ color: "green" }}>
+            <EditIcon />
+          </IconButton>
+        </div>
+        <Divider />
+        <List>
+          {["خانه", "رزرو", "رزرو های من", "تعیین اسلات های رزرو"].map(
+            (text, index) => (
+              <ListItem
+                button
+                onClick={e => {
+                  if (index === 0) {
+                    props.history.push("/panel/admin");
+                    setOpen(false);
+                  } else if (index === 1) {
+                    props.history.push("/panel/admin/reserve");
+                    setOpen(false);
+                  } else if (index === 2) {
+                    props.history.push("/panel/admin/reservations");
+                    setOpen(false);
+                  } else if (index === 3) {
+                    props.history.push("/panel/admin/set-reserve-slots");
+                    setOpen(false);
+                  }
+                }}
+                key={text}
+              >
+                <ListItemIcon>
+                  {index === 1 ? (
+                    <AddRoundedIcon />
+                  ) : index === 0 ? (
+                    <HomeIcon />
+                  ) : index === 2 ? (
+                    <EventAvailableRoundedIcon />
+                  ) : (
+                    <EventNoteIcon />
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={text} style={{ textAlign: "end" }} />
+              </ListItem>
+            )
+          )}
+        </List>
+        <Divider />
+        <List>
+          {["انتخاب دانشگاه", "انتخاب دانشکده"].map((text, index) => (
+            <ListItem
+              onClick={e => {
+                console.log(props);
+                if (index === 0) {
+                  props.history.push("/panel/admin/select-university");
+                  setOpen(false);
+                } else {
+                  props.history.push("/panel/admin/select-department");
+                  setOpen(false);
+                }
+              }}
+              button
+              key={text}
+            >
+              <ListItemIcon>
+                {index === 0 ? (
+                  <AccountBalanceRoundedIcon />
+                ) : (
+                  <SchoolRoundedIcon />
+                )}
+              </ListItemIcon>
+              <ListItemText primary={text} style={{ textAlign: "end" }} />
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+    </div>
+  );
+}
+
+export default withRouter(AdminPanelDrawer);

@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function Signin(props) {
+function Signin(props) {
   const classes = useStyles();
 
   return (
@@ -100,9 +100,7 @@ export default function Signin(props) {
                   .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد")
                   .required("رمز عبور نمی‌تواند خالی باشد")
               })}
-              onSubmit={e => {
-                
-              }}
+              onSubmit={e => {}}
               render={({ errors, touched, validateField, validateForm }) => (
                 <Form className={classes.form} noValidate>
                   <Field
@@ -139,8 +137,9 @@ export default function Signin(props) {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
+                    style={{ fontFamily: "Vazir", fontSize: "1.2em" }}
                   >
-                    Sign In
+                    ورود
                   </Button>
                   <Grid container>
                     <Grid item xs>
@@ -170,3 +169,5 @@ export default function Signin(props) {
     </Container>
   );
 }
+
+export default Signin;

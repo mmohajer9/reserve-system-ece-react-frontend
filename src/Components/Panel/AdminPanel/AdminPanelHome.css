@@ -1,0 +1,17 @@
+.admin-panel-home-icon-btn {
+    padding: 2em !important;
+    background: linear-gradient(to right, rgb(21, 143, 106), rgb(18, 69, 122));
+    margin: 3em 0 1em 0 !important;
+    color: white !important;
+    transition: all .2s;
+    position: relative;
+}
+
+.admin-panel-home-icon {
+    font-size: 2em !important;
+}
+
+.admin-panel-home-icon-btn:hover{
+    transition: all .5s;
+    transform: scale(1.2);
+}
