@@ -22,11 +22,14 @@ import EventAvailableRoundedIcon from "@material-ui/icons/EventAvailableRounded"
 import SchoolRoundedIcon from "@material-ui/icons/SchoolRounded";
 import AccountBalanceRoundedIcon from "@material-ui/icons/AccountBalanceRounded";
 import HomeIcon from "@material-ui/icons/Home";
+import PlaceIcon from "@material-ui/icons/Place";
 import EventNoteIcon from "@material-ui/icons/EventNote";
 import { withRouter } from "react-router";
 import { Route } from "react-router-dom";
 import "./AdminPanelDrawer.css";
 import AdminPanelHome from "./AdminPanelHome";
+import ChooseUniversity from "./ChooseUniversity";
+import ChooseDepartment from "./ChooseDepartment";
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -94,6 +97,30 @@ function AdminPanelDrawer(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [selectedIndex, setSelectedIndex] = React.useState(
+    props.location.pathname === "/panel/admin/reserve" ||
+      props.location.pathname === "/panel/admin/reserve/"
+      ? 1
+      : props.location.pathname === "/panel/admin/reservations" ||
+        props.location.pathname === "/panel/admin/reservations/"
+      ? 2
+      : props.location.pathname === "/panel/admin/select-university" ||
+        props.location.pathname === "/panel/admin/select-university/"
+      ? 4
+      : props.location.pathname === "/panel/admin/select-department" ||
+        props.location.pathname === "/panel/admin/select-department/"
+      ? 5
+      : props.location.pathname === "/panel/admin" ||
+        props.location.pathname === "/panel/admin/"
+      ? 0
+      : props.location.pathname === "/panel/admin/set-reserve-slots" ||
+        props.location.pathname === "/panel/admin/set-reserve-slots/"
+      ? 3
+      : props.location.pathname === "/panel/admin/place-management" ||
+        props.location.pathname === "/panel/admin/place-management/"
+      ? 6
+      : null
+  );
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -134,7 +161,10 @@ function AdminPanelDrawer(props) {
               ? "خانه"
               : props.location.pathname === "/panel/admin/set-reserve-slots" ||
                 props.location.pathname === "/panel/admin/set-reserve-slots/"
-              ? "تعیین اسلات های رزرو"
+              ? "تعیین اسلات رزرو"
+              : props.location.pathname === "/panel/admin/place-management" ||
+                props.location.pathname === "/panel/admin/place-management/"
+              ? "مدیریت مکان ها"
               : null}
           </Typography>
           <Typography variant="h6" noWrap className={classes.title}>
@@ -164,16 +194,19 @@ function AdminPanelDrawer(props) {
           <Typography paragraph>THIS IS My Reservatons</Typography>
         </Route>
         <Route exact path="/panel/admin/select-university">
-          <Typography paragraph>THIS IS Select University</Typography>
+          <ChooseUniversity />
         </Route>
         <Route exact path="/panel/admin/select-department">
-          <Typography paragraph>THIS IS Select Department</Typography>
+          <ChooseDepartment />
         </Route>
         <Route exact path="/panel/admin/set-reserve-slots">
           <Typography paragraph>THIS IS Select set reserve slot</Typography>
         </Route>
+        <Route exact path="/panel/admin/place-management">
+          <Typography paragraph>THIS IS Select place management</Typography>
+        </Route>
         <Route exact path="/panel/admin/">
-          <AdminPanelHome />
+          <AdminPanelHome setSelectedIndex={setSelectedIndex} />
         </Route>
       </main>
       <Drawer
@@ -216,22 +249,27 @@ function AdminPanelDrawer(props) {
             (text, index) => (
               <ListItem
                 button
-                onClick={e => {
+                onClick={event => {
                   if (index === 0) {
+                    setSelectedIndex(0);
                     props.history.push("/panel/admin");
                     setOpen(false);
                   } else if (index === 1) {
+                    setSelectedIndex(1);
                     props.history.push("/panel/admin/reserve");
                     setOpen(false);
                   } else if (index === 2) {
+                    setSelectedIndex(2);
                     props.history.push("/panel/admin/reservations");
                     setOpen(false);
                   } else if (index === 3) {
+                    setSelectedIndex(3);
                     props.history.push("/panel/admin/set-reserve-slots");
                     setOpen(false);
                   }
                 }}
                 key={text}
+                selected={selectedIndex === index}
               >
                 <ListItemIcon>
                   {index === 1 ? (
@@ -251,31 +289,41 @@ function AdminPanelDrawer(props) {
         </List>
         <Divider />
         <List>
-          {["انتخاب دانشگاه", "انتخاب دانشکده"].map((text, index) => (
-            <ListItem
-              onClick={e => {
-                console.log(props);
-                if (index === 0) {
-                  props.history.push("/panel/admin/select-university");
-                  setOpen(false);
-                } else {
-                  props.history.push("/panel/admin/select-department");
-                  setOpen(false);
-                }
-              }}
-              button
-              key={text}
-            >
-              <ListItemIcon>
-                {index === 0 ? (
-                  <AccountBalanceRoundedIcon />
-                ) : (
-                  <SchoolRoundedIcon />
-                )}
-              </ListItemIcon>
-              <ListItemText primary={text} style={{ textAlign: "end" }} />
-            </ListItem>
-          ))}
+          {["انتخاب دانشگاه", "انتخاب دانشکده", "مدیریت مکان ها"].map(
+            (text, index) => (
+              <ListItem
+                onClick={e => {
+                  if (index === 0) {
+                    props.history.push("/panel/admin/select-university");
+                    setSelectedIndex(4);
+                    setOpen(false);
+                  } else if (index === 1) {
+                    props.history.push("/panel/admin/select-department");
+                    setSelectedIndex(5);
+                    setOpen(false);
+                  } else {
+                    props.history.push("/panel/admin/place-management");
+                    setSelectedIndex(6);
+                    setOpen(false);
+                  }
+                }}
+                button
+                key={text}
+                selected={index + 4 === selectedIndex}
+              >
+                <ListItemIcon>
+                  {index === 0 ? (
+                    <AccountBalanceRoundedIcon />
+                  ) : index === 1 ? (
+                    <SchoolRoundedIcon />
+                  ) : (
+                    <PlaceIcon />
+                  )}
+                </ListItemIcon>
+                <ListItemText primary={text} style={{ textAlign: "end" }} />
+              </ListItem>
+            )
+          )}
         </List>
       </Drawer>
     </div>

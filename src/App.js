@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import "./App.css";
-import "../node_modules/vazir-font-farsi-number/dist/font-face.css";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import SigninPage from "./Layout/SigninPage/SigninPage";
 import AdminPanelPage from "./Layout/PanelPage/AdminPanelPage";
