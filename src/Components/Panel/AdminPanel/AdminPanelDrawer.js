@@ -2,6 +2,7 @@ import React from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
+import { Grid, Container } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -30,6 +31,7 @@ import "./AdminPanelDrawer.css";
 import AdminPanelHome from "./AdminPanelHome";
 import ChooseUniversity from "./ChooseUniversity";
 import ChooseDepartment from "./ChooseDepartment";
+import AdminPlaceManagement from "./AdminPlaceManagement";
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -203,7 +205,16 @@ function AdminPanelDrawer(props) {
           <Typography paragraph>THIS IS Select set reserve slot</Typography>
         </Route>
         <Route exact path="/panel/admin/place-management">
-          <Typography paragraph>THIS IS Select place management</Typography>
+          <Container maxWidth="md">
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              <AdminPlaceManagement />
+            </Grid>
+          </Container>
         </Route>
         <Route exact path="/panel/admin/">
           <AdminPanelHome setSelectedIndex={setSelectedIndex} />
