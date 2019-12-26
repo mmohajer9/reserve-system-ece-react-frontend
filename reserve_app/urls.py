@@ -10,5 +10,6 @@ urlpatterns = [
     path("universities/", UniversityList.as_view(), name="university_list"),
     path("departments/", DepartmentListForIUT.as_view(), name="department_list"), #default
     path("departments/<int:uni_id>/", DepartmentListForUniversity.as_view(), name="department_list"),
+    path("places/<int:dept_id>/" ,PlaceListForDepartment.as_view() , name="place_list")
 
 ]

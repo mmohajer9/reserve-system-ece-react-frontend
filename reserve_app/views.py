@@ -59,3 +59,12 @@ class DepartmentListForIUT(ListAPIView):
         
     serializer_class = DepartmentListSerializer
     permission_class = [AllowAny]
+
+
+
+class PlaceListForDepartment(ListCreateAPIView):
+    def get_queryset(self):
+        return Place.objects.filter(department__id = self.kwargs["dept_id"])
+    
+    serializer_class = PlaceListSerializer
+    permission_class = [AllowAny]

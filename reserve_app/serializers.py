@@ -24,3 +24,9 @@ class DepartmentListSerializer(ModelSerializer):
     class Meta:
         model = University
         fields = '__all__'
+
+
+class PlaceListSerializer(ModelSerializer):
+    class Meta:
+        model = Place
+        fields = '__all__'
