@@ -17,11 +17,14 @@ import {
   ListItemIcon,
   ListItemText,
   Grid,
-  Paper
+  Paper,
+  ClickAwayListener
 } from "@material-ui/core";
 import EditLocationIcon from "@material-ui/icons/EditLocation";
 import Axios from "axios";
 import { API_URL } from "../../../Commons";
+import AdminPanelEditPlaceDialog from "./AdminPanelEditPlaceDialog";
+import AdminPanelDeletePlaceDialog from "./AdminPanelDeletePlaceDialog";
 
 function PaperSheet() {
   return (
@@ -54,6 +57,8 @@ const useStyles = makeStyles(theme => ({
 function AdminCurrentPlaces(props) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
+  const [showRemoveDialog, setShowRemoveDialog] = React.useState(false);
+  const [showEditDialog, setShowEditDialog] = React.useState(false);
   const [placeList, setPlaceList] = React.useState([]);
   const handleChange = panel => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -63,7 +68,7 @@ function AdminCurrentPlaces(props) {
       const url = API_URL + "api/reserve-system/places/" + props.department_id;
       Axios.get(url)
         .then(res => {
-        //   console.log(res.data);
+          //   console.log(res.data);
           setPlaceList(res.data);
         })
         .catch(err => {
@@ -73,6 +78,8 @@ function AdminCurrentPlaces(props) {
   }, []);
   return (
     <div className={classes.root}>
+      {showEditDialog === true ? <AdminPanelEditPlaceDialog setShowEditDialog = {setShowEditDialog} /> : null}
+      {showRemoveDialog === true ? <AdminPanelDeletePlaceDialog setShowRemoveDialog = {setShowRemoveDialog}/> : null}
       {props.university_id === "" || props.department_id === "" ? (
         <PaperSheet />
       ) : (
@@ -87,7 +94,9 @@ function AdminCurrentPlaces(props) {
               aria-controls="panel1bh-content"
               id="panel1bh-header"
             >
-              <Typography className={classes.heading}>{item.name} - {props.department_name}</Typography>
+              <Typography className={classes.heading}>
+                {item.name} - {props.department_name}
+              </Typography>
               <Typography className={classes.secondaryHeading}>
                 {item.location} - {item.capacity} نفر ظرفیت
               </Typography>
@@ -102,6 +111,7 @@ function AdminCurrentPlaces(props) {
                 >
                   <ListItem
                     button
+                    onClick={e => setShowEditDialog(true)}
                     style={{
                       borderRadius: "50px",
                       background:
@@ -121,6 +131,7 @@ function AdminCurrentPlaces(props) {
                     <ListItemText>ویرایش مکان</ListItemText>
                   </ListItem>
                   <ListItem
+                    onClick={e => setShowRemoveDialog(true)}
                     button
                     style={{
                       borderRadius: "50px",
