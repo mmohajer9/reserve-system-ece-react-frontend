@@ -50,7 +50,7 @@ class DepartmentListForUniversity(ListAPIView):
         return Department.objects.filter(university__id = self.kwargs["uni_id"])
     
     serializer_class = DepartmentListSerializer
-    permission_class = [AllowAny]
+    permission_classes = [AllowAny]
     
 
 class DepartmentListForIUT(ListAPIView):
@@ -58,7 +58,7 @@ class DepartmentListForIUT(ListAPIView):
         return Department.objects.filter(university__id = 1)
         
     serializer_class = DepartmentListSerializer
-    permission_class = [AllowAny]
+    permission_classes = [AllowAny]
 
 
 
@@ -67,4 +67,29 @@ class PlaceListForDepartment(ListCreateAPIView):
         return Place.objects.filter(department__id = self.kwargs["dept_id"])
     
     serializer_class = PlaceListSerializer
-    permission_class = [AllowAny]
+    permission_classes = [isAdminOrReadOnly]
+
+class PlaceDetailForDepartment(RetrieveUpdateDestroyAPIView):
+    def get_queryset(self):
+        return Place.objects.filter(department__id = self.kwargs["dept_id"] , pk = self.kwargs["pk"])
+        #? dont use objects.get because it should return a list with filter that is "queryset"
+    
+    serializer_class = PlaceDetailSerializer
+    permission_classes = [isAdminOrReadOnly]
+
+
+class MemberList(ListAPIView):
+    def get_queryset(self):
+        return Member.objects.all()
+        
+    serializer_class = MemberSerializer
+    permission_classes = [AllowAny]
+
+
+
+class MemberDetail(RetrieveUpdateDestroyAPIView):
+    def get_queryset(self):
+        return Member.objects.filter(user__id = self.kwargs["pk"])
+        
+    serializer_class = MemberSerializer
+    permission_classes = [AllowAny]

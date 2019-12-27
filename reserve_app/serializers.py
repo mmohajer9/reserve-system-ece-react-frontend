@@ -30,3 +30,34 @@ class PlaceListSerializer(ModelSerializer):
     class Meta:
         model = Place
         fields = '__all__'
+
+
+class PlaceDetailSerializer(ModelSerializer):
+    class Meta:
+        model = Place
+        fields = '__all__'
+
+
+class UserSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "is_superuser",
+            "username",
+            "first_name",
+            "last_name",
+            "email",
+            "is_staff",
+            "is_active",
+        ]
+
+class MemberSerializer(ModelSerializer):
+
+    user = UserSerializer(read_only = True)
+
+    class Meta:
+        model = Member
+        fields = '__all__'
+        depth = 1
