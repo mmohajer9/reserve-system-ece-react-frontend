@@ -16,6 +16,7 @@ import { Formik, Field, Form /* ErrorMessage */ } from "formik";
 import { TextField } from "formik-material-ui";
 import * as Yup from "yup";
 import "./Signin.css";
+import { toast } from "react-toastify";
 
 import {
   createMuiTheme,
@@ -25,6 +26,11 @@ import {
 } from "@material-ui/core/styles";
 import rtl from "jss-rtl";
 import { create } from "jss";
+import Axios from "axios";
+import { API_URL, CLIENT_ID, RESERVE_SYSTEM_URL } from "../../Commons";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import { setUniversity, setDepartment, setAdmin, setUserInfo } from "../../Actions";
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
@@ -100,8 +106,86 @@ function Signin(props) {
                   .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد")
                   .required("رمز عبور نمی‌تواند خالی باشد")
               })}
-              onSubmit={e => {}}
-              render={({ errors, touched, validateField, validateForm }) => (
+              onSubmit={(values, actions) => {
+                // console.log(values , actions)
+                const url = API_URL + "signin/oauth/token/";
+                const fetchMemberUrl =
+                  API_URL + RESERVE_SYSTEM_URL + "members/" + values.username;
+                const signin_info = {
+                  username: values.username,
+                  password: values.password,
+                  grant_type: "password",
+                  client_id: CLIENT_ID
+                };
+                Axios.post(url, signin_info)
+                  .then(async res => {
+                    toast.success("ورود شما با موفقیت انجام شد", {
+                      position: toast.POSITION.TOP_RIGHT
+                    });
+                    let memberInfo = {};
+                    await Axios.get(fetchMemberUrl)
+                      .then(res => {
+                        memberInfo = res.data;
+                      })
+                      .catch(err => console.log(err.response));
+
+                    const userInfo = {
+                      ...res.data,
+                      ...memberInfo,
+                      login_status: true
+                    };
+                    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+
+                    props.dispatch(
+                      setUniversity(
+                        userInfo.department.university.id,
+                        userInfo.department.university.name
+                      )
+                    );
+                    props.dispatch(
+                      setDepartment(
+                        userInfo.department.id,
+                        userInfo.department.name
+                      )
+                    );
+                    props.dispatch(
+                      setAdmin(
+                        userInfo.user.is_superuser || userInfo.user.is_staff
+                      )
+                    );
+                    props.dispatch(
+                      setUserInfo(
+                        userInfo.user.id,
+                        userInfo.user.username,
+                        userInfo.user.email,
+                        userInfo.user.first_name,
+                        userInfo.user.last_name,
+                        userInfo.id,
+                        userInfo.member_id
+                      )
+                    );
+                    if (userInfo.user.is_superuser || userInfo.user.is_staff) {
+                      setTimeout(() => {
+                        props.history.push("/panel/admin/");
+                      }, 1000);
+                    } else {
+                      setTimeout(() => {
+                        props.history.push("/panel/user/");
+                      }, 1000);
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err.response);
+                    toast.error(
+                      "خطا لطفا نام کاربری یا رمز عبور خود را بررسی کنید",
+                      {
+                        position: toast.POSITION.TOP_RIGHT
+                      }
+                    );
+                    actions.setSubmitting(false);
+                  });
+              }}
+              render={formProps => (
                 <Form className={classes.form} noValidate>
                   <Field
                     variant="outlined"
@@ -170,4 +254,8 @@ function Signin(props) {
   );
 }
 
-export default Signin;
+const mapStateToProps = state => {
+  return state;
+};
+
+export default connect(mapStateToProps)(withRouter(Signin));

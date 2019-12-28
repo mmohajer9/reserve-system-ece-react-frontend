@@ -3,12 +3,16 @@ const initState = {
   university_name: "",
   department_id: "",
   department_name: "",
-  isAdmin: "",
+  is_admin: "",
   user_pk: "",
   username: "",
+  email: "",
   first_name: "",
   last_name: "",
-  member_id: ""
+  member_pk: "",
+  member_id: "",
+  data: "",
+  loading: ""
 };
 
 const reducer = (state = initState, action) => {
@@ -25,6 +29,22 @@ const reducer = (state = initState, action) => {
         ...state,
         department_id: action.dept_id,
         department_name: action.dept_name
+      };
+    case "SET_ADMIN":
+      return {
+        ...state,
+        is_admin: action.is_admin
+      };
+    case "SET_USER_INFO":
+      return {
+        ...state,
+        user_pk: action.user_pk,
+        username: action.username,
+        email: action.email,
+        first_name: action.first_name,
+        last_name: action.last_name,
+        member_pk: action.member_pk,
+        member_id: action.member_id
       };
     default:
       return state;

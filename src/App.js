@@ -5,6 +5,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import SigninPage from "./Layout/SigninPage/SigninPage";
 import AdminPanelPage from "./Layout/PanelPage/AdminPanelPage";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+
 
 function App() {
   return (
@@ -23,6 +26,7 @@ function App() {
             </Route>
           </Switch>
         </Router>
+        <ToastContainer />
       </div>
     </>
   );
