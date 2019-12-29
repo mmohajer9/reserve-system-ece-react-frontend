@@ -30,7 +30,7 @@ import Axios from "axios";
 import { API_URL, CLIENT_ID, RESERVE_SYSTEM_URL } from "../../Commons";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-import { setUniversity, setDepartment, setAdmin, setUserInfo } from "../../Actions";
+// import { setUniversity, setDepartment, setAdmin, setUserInfo } from "../../Actions";
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
@@ -136,34 +136,7 @@ function Signin(props) {
                     };
                     localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-                    props.dispatch(
-                      setUniversity(
-                        userInfo.department.university.id,
-                        userInfo.department.university.name
-                      )
-                    );
-                    props.dispatch(
-                      setDepartment(
-                        userInfo.department.id,
-                        userInfo.department.name
-                      )
-                    );
-                    props.dispatch(
-                      setAdmin(
-                        userInfo.user.is_superuser || userInfo.user.is_staff
-                      )
-                    );
-                    props.dispatch(
-                      setUserInfo(
-                        userInfo.user.id,
-                        userInfo.user.username,
-                        userInfo.user.email,
-                        userInfo.user.first_name,
-                        userInfo.user.last_name,
-                        userInfo.id,
-                        userInfo.member_id
-                      )
-                    );
+
                     if (userInfo.user.is_superuser || userInfo.user.is_staff) {
                       setTimeout(() => {
                         props.history.push("/panel/admin/");

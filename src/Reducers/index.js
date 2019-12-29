@@ -11,12 +11,17 @@ const initState = {
   last_name: "",
   member_pk: "",
   member_id: "",
-  data: "",
-  loading: ""
+  is_data_recieved: false,
+  loading: false
 };
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
+    case "SET_DATA_STATUS":
+      return {
+        ...state,
+        is_data_recieved: action.is_data_recieved
+      };
     case "SET_UNI":
       return {
         ...state,

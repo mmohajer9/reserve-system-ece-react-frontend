@@ -41,3 +41,11 @@ export const setUserInfo = (
     member_id
   };
 };
+
+
+export const setDataStatus = (data_status) => {
+  return {
+    type : "SET_DATA_STATUS",
+    is_data_recieved : data_status
+  }
+}

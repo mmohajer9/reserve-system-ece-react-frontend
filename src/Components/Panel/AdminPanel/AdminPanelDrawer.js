@@ -32,6 +32,8 @@ import AdminPanelHome from "./AdminPanelHome";
 import ChooseUniversity from "./ChooseUniversity";
 import ChooseDepartment from "./ChooseDepartment";
 import AdminPlaceManagement from "./AdminPlaceManagement";
+import { connect } from "react-redux";
+import { toast } from "react-toastify";
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -245,9 +247,20 @@ function AdminPanelDrawer(props) {
             color="primary"
             className={classes.title}
           >
-            محمد مهدی مهاجر
+            {`${props.first_name}  ${props.last_name}`}
           </Typography>
-          <IconButton color="secondary">
+          <IconButton
+            onClick={e => {
+              localStorage.removeItem("userInfo");
+              toast.info("خدانگهدار", {
+                position: toast.POSITION.TOP_LEFT
+              });
+              setTimeout(() => {
+                props.history.push("/signin/");
+              },1000);
+            }}
+            color="secondary"
+          >
             <ExitToAppIcon />
           </IconButton>
           <IconButton style={{ color: "green" }}>
@@ -340,5 +353,7 @@ function AdminPanelDrawer(props) {
     </div>
   );
 }
-
-export default withRouter(AdminPanelDrawer);
+const mapStateToProps = state => {
+  return state;
+};
+export default connect(mapStateToProps)(withRouter(AdminPanelDrawer));
