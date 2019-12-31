@@ -23,6 +23,9 @@ import {
 import rtl from "jss-rtl";
 import { create } from "jss";
 import { connect } from "react-redux";
+import Axios from "axios";
+import { API_URL, RESERVE_SYSTEM_URL } from "../../../Commons";
+import { toast } from "react-toastify";
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
@@ -90,8 +93,41 @@ function AdminAddPlace(props) {
                     "موقعیت مکان نمیتواند خالی باشد"
                   )
                 })}
-                onSubmit={e => {}}
-                render={({ errors, touched, validateField, validateForm }) => (
+                onSubmit={async (values, actions) => {
+                  // console.log(values, actions, props);
+                  const token = JSON.parse(localStorage.getItem("userInfo"))
+                    .access_token;
+                  const headers = {
+                    Authorization: `Bearer ${token}`
+                  };
+                  const submitInfo = {
+                    name: values.name,
+                    capacity: values.capacity,
+                    location: values.location,
+                    department: props.department_id
+                  };
+                  const url =
+                    API_URL +
+                    RESERVE_SYSTEM_URL +
+                    `places/${props.department_id}/`;
+                  await Axios.post(url, submitInfo, {
+                    headers: headers
+                  })
+                    .then(res => {
+                      console.log(res);
+                      toast.success("مکان ساخته شد !", {
+                        position: toast.POSITION.TOP_RIGHT
+                      });
+                    })
+                    .catch(err => {
+                      console.log(err.response);
+                      toast.error("خطا در ساختن مکان", {
+                        position: toast.POSITION.TOP_RIGHT
+                      });
+                    });
+                  actions.setSubmitting(false);
+                }}
+                render={formProps => (
                   <Form className={classes.form} noValidate>
                     <Field
                       variant="outlined"
@@ -113,6 +149,7 @@ function AdminAddPlace(props) {
                       name="capacity"
                       label="ظرفیت"
                       id="capacity"
+                      type="number"
                       // autoComplete=""
                       component={TextField}
                     />

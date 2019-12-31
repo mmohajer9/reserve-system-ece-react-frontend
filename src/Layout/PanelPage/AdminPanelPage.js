@@ -45,8 +45,11 @@ class AdminPanelPage extends React.Component {
     let userInfo = JSON.parse(localStorage.getItem("userInfo"));
     if (userInfo) {
       if (userInfo.login_status) {
-
-        const fetchMemberUrl = API_URL + RESERVE_SYSTEM_URL + "members/" + userInfo.user.username;
+        if (!userInfo.user.is_superuser && !userInfo.user.is_staff) {
+          this.props.history.push("/panel/user");
+        }
+        const fetchMemberUrl =
+          API_URL + RESERVE_SYSTEM_URL + "members/" + userInfo.user.username;
 
         let memberInfo = {};
         await Axios.get(fetchMemberUrl)

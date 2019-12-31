@@ -135,7 +135,7 @@ function Signin(props) {
                       login_status: true
                     };
                     localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
+                    console.log(userInfo)
 
                     if (userInfo.user.is_superuser || userInfo.user.is_staff) {
                       setTimeout(() => {
