@@ -75,7 +75,7 @@ function AdminAddPlace(props) {
     return <PaperSheet />;
   } else {
     return (
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <StylesProvider jss={jss}>
           <ThemeProvider theme={theme}>
@@ -137,6 +137,8 @@ function AdminAddPlace(props) {
                       id="name"
                       label="نام مکان"
                       name="name"
+                      style={{ fontFamily: "Vazir" }}
+
                       // autoComplete="email"
                       // autoFocus
                       component={TextField}
@@ -150,6 +152,8 @@ function AdminAddPlace(props) {
                       label="ظرفیت"
                       id="capacity"
                       type="number"
+                      style={{ fontFamily: "Vazir" }}
+
                       // autoComplete=""
                       component={TextField}
                     />
@@ -161,6 +165,8 @@ function AdminAddPlace(props) {
                       name="location"
                       label="موقعیت"
                       id="location"
+                      style={{ fontFamily: "Vazir" }}
+
                       // autoComplete=""
                       component={TextField}
                     />

@@ -1,12 +1,18 @@
-#name-label , #name-helper-text {
-    font-family: 'Vazir';
+#name-label,
+#name-helper-text {
+  font-family: "Vazir";
 }
 
-
-#capacity-label , #capacity-helper-text {
-    font-family: 'Vazir';
+#capacity-label,
+#capacity-helper-text {
+  font-family: "Vazir";
 }
 
-#location-label , #location-helper-text {
-    font-family: 'Vazir';
+#location-label,
+#location-helper-text {
+  font-family: "Vazir";
+}
+
+.MuiInputBase-input {
+  font-family: Vazir !important;
 }

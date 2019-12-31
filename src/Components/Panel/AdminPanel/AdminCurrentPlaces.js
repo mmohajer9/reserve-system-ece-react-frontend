@@ -56,14 +56,18 @@ const useStyles = makeStyles(theme => ({
 
 function AdminCurrentPlaces(props) {
   const classes = useStyles();
+  const [placeID, setPlaceID] = React.useState(0);
+  const [placeInfo, setPlaceInfo] = React.useState({
+    name: "",
+    capacity: "",
+    location: ""
+  });
   const [expanded, setExpanded] = React.useState(false);
   const [showRemoveDialog, setShowRemoveDialog] = React.useState(false);
   const [showEditDialog, setShowEditDialog] = React.useState(false);
   const [placeList, setPlaceList] = React.useState([]);
-  const handleChange = panel => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-  useEffect(() => {
+
+  const callGetPlaces = () => {
     if (props.university_id !== "" && props.department_id !== "") {
       const url = API_URL + "api/reserve-system/places/" + props.department_id;
       Axios.get(url)
@@ -75,11 +79,33 @@ function AdminCurrentPlaces(props) {
           console.log(err.response);
         });
     }
+  };
+
+  const handleChange = panel => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  useEffect(() => {
+    callGetPlaces();
   }, []);
   return (
     <div className={classes.root}>
-      {showEditDialog === true ? <AdminPanelEditPlaceDialog setShowEditDialog = {setShowEditDialog} /> : null}
-      {showRemoveDialog === true ? <AdminPanelDeletePlaceDialog setShowRemoveDialog = {setShowRemoveDialog}/> : null}
+      {showEditDialog === true ? (
+        <AdminPanelEditPlaceDialog
+          placeID={placeID}
+          placeInfo={placeInfo}
+          setPlaceID={setPlaceID}
+          setShowEditDialog={setShowEditDialog}
+          callGetPlaces={callGetPlaces}
+        />
+      ) : null}
+      {showRemoveDialog === true ? (
+        <AdminPanelDeletePlaceDialog
+          placeID={placeID}
+          setPlaceID={setPlaceID}
+          setShowRemoveDialog={setShowRemoveDialog}
+          callGetPlaces={callGetPlaces}
+        />
+      ) : null}
       {props.university_id === "" || props.department_id === "" ? (
         <PaperSheet />
       ) : (
@@ -88,6 +114,15 @@ function AdminCurrentPlaces(props) {
             expanded={expanded === `panel${index}`}
             onChange={handleChange(`panel${index}`)}
             key={index}
+            onClick={e => {
+              setPlaceID(item.id);
+              setPlaceInfo({
+                name: item.name,
+                capacity: item.capacity,
+                location: item.location
+              });
+              // console.log(item);
+            }}
           >
             <ExpansionPanelSummary
               expandIcon={<ExpandMoreIcon />}
