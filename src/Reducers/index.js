@@ -12,11 +12,29 @@ const initState = {
   member_pk: "",
   member_id: "",
   is_data_recieved: false,
-  loading: false
+  loading: false,
+  selected_place: "",
+  selected_date: "",
+  date_time_slots: [],
 };
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
+    case "SET_DATE_TIME_SLOTS":
+      return {
+        ...state,
+        date_time_slots: action.date_time_slots,
+      };
+    case "SET_SELECTED_DATE":
+      return {
+        ...state,
+        selected_date: action.selected_date,
+      };
+    case "SET_SELECTED_PLACE":
+      return {
+        ...state,
+        selected_place: action.selected_place,
+      };
     case "SET_DATA_STATUS":
       return {
         ...state,

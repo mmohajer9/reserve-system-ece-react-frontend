@@ -34,6 +34,11 @@ import ChooseDepartment from "./ChooseDepartment";
 import AdminPlaceManagement from "./AdminPlaceManagement";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
+// import MakeDateTimeSlot from "./MakeDateTimeSlot";
+// import ChoosePlace from "./ChoosePlace";
+import ManageDateTimeSlotsTable from "./ManageDateTimeSlotsTable";
+import ChooseDatePlace from "./ChooseDatePlace";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
@@ -204,7 +209,26 @@ function AdminPanelDrawer(props) {
           <ChooseDepartment />
         </Route>
         <Route exact path="/panel/admin/set-reserve-slots">
-          <Typography paragraph>THIS IS Select set reserve slot</Typography>
+          <Container maxWidth="md">
+            <Grid
+              container
+              direction="row"
+              justify="space-around"
+              alignItems="center"
+            >
+              {/* <ChoosePlace />
+              <MakeDateTimeSlot /> */}
+              <ChooseDatePlace />
+            </Grid>
+            <Grid
+              container
+              direction="column"
+              justify="center"
+              alignItems="center"
+            >
+              <ManageDateTimeSlotsTable />
+            </Grid>
+          </Container>
         </Route>
         <Route exact path="/panel/admin/place-management">
           <Container maxWidth="md">
@@ -257,7 +281,7 @@ function AdminPanelDrawer(props) {
               });
               setTimeout(() => {
                 props.history.push("/signin/");
-              },1000);
+              }, 1000);
             }}
             color="secondary"
           >
@@ -356,4 +380,5 @@ function AdminPanelDrawer(props) {
 const mapStateToProps = state => {
   return state;
 };
+
 export default connect(mapStateToProps)(withRouter(AdminPanelDrawer));
