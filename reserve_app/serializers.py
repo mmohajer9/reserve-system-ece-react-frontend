@@ -15,7 +15,7 @@ from rest_framework.exceptions import (
 )
 
 
-class UniversityListSerializer(ModelSerializer):
+class UniversitySerializer(ModelSerializer):
     class Meta:
         model = University
         fields = '__all__'
@@ -60,4 +60,12 @@ class MemberSerializer(ModelSerializer):
     class Meta:
         model = Member
         fields = '__all__'
-        depth = 1
+        depth = 2
+
+
+class DateTimeSlotSerializer(ModelSerializer):
+
+    class Meta:
+        model = DateTimeSlot
+        fields = '__all__'
+        

@@ -41,10 +41,14 @@ from .serializers import *
 
 class UniversityList(ListAPIView):
     queryset = University.objects.all()
-    serializer_class = UniversityListSerializer
+    serializer_class = UniversitySerializer
     permission_classes = [AllowAny, ]
 
-
+class UniversityDetail(ListAPIView):
+    def get_queryset(self):
+        return University.objects.filter(id = self.kwargs["pk"])
+    serializer_class = UniversitySerializer
+    permission_classes = [AllowAny, ]
 class DepartmentListForUniversity(ListAPIView):
     def get_queryset(self):
         return Department.objects.filter(university__id = self.kwargs["uni_id"])
@@ -87,9 +91,34 @@ class MemberList(ListAPIView):
 
 
 
-class MemberDetail(RetrieveUpdateDestroyAPIView):
+class MemberDetailByUserID(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
-        return Member.objects.filter(user__id = self.kwargs["pk"])
-        
+        return Member.objects.filter(user__id = self.kwargs["user__id"])
+
+    lookup_field = "user__id"    
     serializer_class = MemberSerializer
     permission_classes = [AllowAny]
+
+class MemberDetailByUserUsername(RetrieveUpdateDestroyAPIView):
+    def get_queryset(self):
+        return Member.objects.filter(user__username = self.kwargs["user__username"])
+        
+    lookup_field = "user__username"
+    serializer_class = MemberSerializer
+    permission_classes = [AllowAny]
+
+
+
+class PlaceDateTimeSlotList(ListCreateAPIView):
+    def get_queryset(self):
+        if self.request.method == "GET":
+            date = self.request.GET.get('date')
+            if date:
+                return DateTimeSlot.objects.filter(place = self.kwargs["pk"] , date = date)
+            else:
+                return DateTimeSlot.objects.filter(place = self.kwargs["pk"])
+        else:
+            return DateTimeSlot.objects.filter(place = self.kwargs["pk"])
+        
+    serializer_class = DateTimeSlotSerializer
+    permission_classes = [isAdminOrReadOnly]
