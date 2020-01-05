@@ -32,7 +32,7 @@ import { setDateTimeSlots } from "../../../Actions";
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
 const theme = createMuiTheme({
-  direction: "rtl" // Both here and <body dir="rtl">
+  direction: "ltr",
 });
 
 function AdminPanelAddDateTimeSlotDialog(props) {
@@ -78,7 +78,7 @@ function AdminPanelAddDateTimeSlotDialog(props) {
                       end_time: moment(endTime).format("HH:mm"),
                       isReserved
                     })} */}
-                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <MuiPickersUtilsProvider utils={MomentUtils} locale="fa">
                       <TimePicker
                         clearable
                         ampm={false}
@@ -86,10 +86,9 @@ function AdminPanelAddDateTimeSlotDialog(props) {
                         value={beginTime}
                         onChange={setBeginTime}
                         style={{ display: "block", margin: "1em 0" }}
-                        dir="rtl"
                       />
                     </MuiPickersUtilsProvider>
-                    <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <MuiPickersUtilsProvider utils={MomentUtils} locale="fa">
                       <TimePicker
                         clearable
                         ampm={false}
@@ -157,7 +156,7 @@ function AdminPanelAddDateTimeSlotDialog(props) {
                 isReserved,
                 place: props.selected_place.id
               };
-              console.log(submitInfo);
+              // console.log(submitInfo);
               const url =
                 API_URL +
                 RESERVE_SYSTEM_URL +
@@ -166,7 +165,7 @@ function AdminPanelAddDateTimeSlotDialog(props) {
                 headers: headers
               })
                 .then(res => {
-                  console.log(res.data);
+                  // console.log(res.data);
                   toast.info("اسلات مورد نظر اضافه شد !", {
                     position: toast.POSITION.TOP_RIGHT
                   });
