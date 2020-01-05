@@ -13,17 +13,15 @@ import { withRouter } from "react-router";
 import Axios from "axios";
 import { API_URL, RESERVE_SYSTEM_URL } from "../../../Commons";
 import { toast } from "react-toastify";
+import { setDateTimeSlots } from "../../../Actions";
+import jalaali from "jalaali-js";
 
 function AdminPanelDeleteDateTimeSlotDialog(props) {
   const [open, setOpen] = React.useState(true);
 
-  //   const handleClickOpen = () => {
-  //     setOpen(true);
-  //   };
-
   const handleClose = () => {
+    props.close_delete_dialog();
     setOpen(false);
-    props.setShowRemoveDialog(false);
   };
 
   return (
@@ -35,7 +33,7 @@ function AdminPanelDeleteDateTimeSlotDialog(props) {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle style={{ textAlign: "center" }} id="form-dialog-title">
-          حذف مکان
+          حذف اسلات زمان
         </DialogTitle>
         <DialogContent>
           <Avatar
@@ -48,7 +46,7 @@ function AdminPanelDeleteDateTimeSlotDialog(props) {
             <DeleteForeverIcon style={{ fontSize: "3em" }} fontSize="large" />
           </Avatar>
           <DialogContentText style={{ margin: "2em 0" }}>
-            آیا مطمئن هستید که میخواهید مکان را حذف کنید ؟
+            آیا مطمئن هستید که میخواهید این اسلات زمانی را حذف کنید ؟
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -61,7 +59,7 @@ function AdminPanelDeleteDateTimeSlotDialog(props) {
           </Button>
           <Button
             style={{ fontFamily: "Vazir", fontSize: "1.5em" }}
-            onClick={async e => {
+            onClick={e => {
               const token = JSON.parse(localStorage.getItem("userInfo"))
                 .access_token;
               const headers = {
@@ -70,21 +68,43 @@ function AdminPanelDeleteDateTimeSlotDialog(props) {
               const url =
                 API_URL +
                 RESERVE_SYSTEM_URL +
-                `places/${props.department_id}/${props.placeID}/`;
-              await Axios.delete(url, {
+                `places/${props.department_id}/${props.selected_place.id}/datetimeslots/${props.selected_date_time_slot.id}/`;
+              Axios.delete(url, {
                 headers: headers
               })
                 .then(res => {
-                  toast.info("مکان مورد نظر خذف شد !", {
+                  toast.info("اسلات مورد نظر خذف شد !", {
                     position: toast.POSITION.TOP_RIGHT
                   });
+                  const g_date = jalaali.toGregorian(
+                    props.selected_date.year,
+                    props.selected_date.month,
+                    props.selected_date.day
+                  );
+                  const url =
+                    API_URL +
+                    `api/reserve-system/places/${props.department_id}/${props.selected_place.id}/datetimeslots/`;
+                  Axios.get(url, {
+                    params: {
+                      date: `${g_date.gy}-${g_date.gm}-${g_date.gd}`
+                    }
+                  })
+                    .then(res => {
+                      // console.log(res.data);
+                      //   this.setState({
+                      //     api_called: false
+                      //   });
+                      props.dispatch(setDateTimeSlots(res.data));
+                    })
+                    .catch(err => {
+                      console.log(err.response);
+                    });
                 })
                 .catch(err => {
-                  toast.error("خطا در حذف مکان مورد نظر !", {
+                  toast.error("خطا در حذف اسلات مورد نظر !", {
                     position: toast.POSITION.TOP_RIGHT
                   });
                 });
-              props.callGetPlaces();
               handleClose();
             }}
             color="primary"

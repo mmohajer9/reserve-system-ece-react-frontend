@@ -52,20 +52,27 @@ export const setDataStatus = data_status => {
 export const setSelectedPlace = selected_place => {
   return {
     type: "SET_SELECTED_PLACE",
-    selected_place: selected_place,
+    selected_place: selected_place
   };
 };
 
 export const setSelectedDate = selected_date => {
   return {
     type: "SET_SELECTED_DATE",
-    selected_date: selected_date,
+    selected_date: selected_date
   };
 };
 
 export const setDateTimeSlots = date_time_slots => {
   return {
     type: "SET_DATE_TIME_SLOTS",
-    date_time_slots: date_time_slots,
+    date_time_slots: date_time_slots
+  };
+};
+
+export const setSelectedDateTimeSlot = selected_date_time_slot => {
+  return {
+    type: "SET_SELECTED_DATE_TIME_SLOT",
+    selected_date_time_slot: selected_date_time_slot
   };
 };

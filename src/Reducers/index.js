@@ -16,24 +16,30 @@ const initState = {
   selected_place: "",
   selected_date: "",
   date_time_slots: [],
+  selected_date_time_slot: ""
 };
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
+    case "SET_SELECTED_DATE_TIME_SLOT":
+        return {
+          ...state,
+          selected_date_time_slot: action.selected_date_time_slot
+        }
     case "SET_DATE_TIME_SLOTS":
       return {
         ...state,
-        date_time_slots: action.date_time_slots,
+        date_time_slots: action.date_time_slots
       };
     case "SET_SELECTED_DATE":
       return {
         ...state,
-        selected_date: action.selected_date,
+        selected_date: action.selected_date
       };
     case "SET_SELECTED_PLACE":
       return {
         ...state,
-        selected_place: action.selected_place,
+        selected_place: action.selected_place
       };
     case "SET_DATA_STATUS":
       return {

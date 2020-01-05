@@ -29,6 +29,7 @@ import FloatingAddButton from "./FloatingAddButton";
 import AdminPanelDeleteDateTimeSlotDialog from "./AdminPanelDeleteDateTimeSlotDialog";
 import AdminPanelEditDateTimeSlotDialog from "./AdminPanelEditDateTimeSlotDialog";
 import AdminPanelAddDateTimeSlotDialog from "./AdminPanelAddDateTimeSlotDialog";
+import { setSelectedDateTimeSlot } from "../../../Actions";
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
@@ -121,10 +122,21 @@ function StickyHeadTable(props) {
                     key={index}
                   >
                     <TableCell style={{ fontFamily: "Vazir" }} align="center">
-                      <IconButton color="primary">
+                      <IconButton
+                        onClick={e => {
+                          props.open_edit_dialog();
+                        }}
+                        color="primary"
+                      >
                         <EditIcon />
                       </IconButton>
-                      <IconButton color="secondary">
+                      <IconButton
+                        onClick={e => {
+                          props.dispatch(setSelectedDateTimeSlot(row));
+                          props.open_delete_dialog();
+                        }}
+                        color="secondary"
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </TableCell>
@@ -170,6 +182,10 @@ class DateTimeSlotTable extends React.Component {
     delete_dialog_is_open: false
   };
 
+  componentWillUnmount() {
+    this.props.dispatch(setSelectedDateTimeSlot(""));
+  }
+
   open_edit_dialog = e => {
     this.setState({
       edit_dialog_is_open: true
@@ -213,13 +229,18 @@ class DateTimeSlotTable extends React.Component {
             ) : this.state.edit_dialog_is_open ? (
               <AdminPanelEditDateTimeSlotDialog />
             ) : this.state.delete_dialog_is_open ? (
-              <AdminPanelDeleteDateTimeSlotDialog />
+              <AdminPanelDeleteDateTimeSlotDialog
+                close_delete_dialog={this.close_delete_dialog}
+              />
             ) : null}
 
-            <StickyHeadTable rows={this.props.date_time_slots} />
-            <FloatingAddButton
-              open_add_dialog={this.open_add_dialog}
+            <StickyHeadTable
+              open_delete_dialog={this.open_delete_dialog}
+              open_edit_dialog={this.open_edit_dialog}
+              rows={this.props.date_time_slots}
+              dispatch={this.props.dispatch}
             />
+            <FloatingAddButton open_add_dialog={this.open_add_dialog} />
           </div>
         </ThemeProvider>
       </StylesProvider>
