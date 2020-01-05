@@ -124,6 +124,7 @@ function StickyHeadTable(props) {
                     <TableCell style={{ fontFamily: "Vazir" }} align="center">
                       <IconButton
                         onClick={e => {
+                          props.dispatch(setSelectedDateTimeSlot(row));
                           props.open_edit_dialog();
                         }}
                         color="primary"
@@ -227,7 +228,9 @@ class DateTimeSlotTable extends React.Component {
                 close_add_dialog={this.close_add_dialog}
               />
             ) : this.state.edit_dialog_is_open ? (
-              <AdminPanelEditDateTimeSlotDialog />
+              <AdminPanelEditDateTimeSlotDialog
+                close_edit_dialog={this.close_edit_dialog}
+              />
             ) : this.state.delete_dialog_is_open ? (
               <AdminPanelDeleteDateTimeSlotDialog
                 close_delete_dialog={this.close_delete_dialog}

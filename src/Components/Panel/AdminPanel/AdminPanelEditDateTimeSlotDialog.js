@@ -5,9 +5,13 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 // import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { Formik, Field, Form /* ErrorMessage */ } from "formik";
-import { TextField } from "formik-material-ui";
-import * as Yup from "yup";
+import { Formik, /*Field*/ Form /* ErrorMessage */ } from "formik";
+import { TimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import moment from "jalali-moment";
+
+import "./AdminPanelAddDateTimeSlotDialog.css";
+// import * as Yup from "yup";
 import {
   createMuiTheme,
   ThemeProvider,
@@ -21,33 +25,41 @@ import { withRouter } from "react-router";
 import { API_URL, RESERVE_SYSTEM_URL } from "../../../Commons";
 import { toast } from "react-toastify";
 import Axios from "axios";
+import { Typography, FormControlLabel, Checkbox } from "@material-ui/core";
+import jalaali from "jalaali-js";
+import { setDateTimeSlots } from "../../../Actions";
 
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
 const theme = createMuiTheme({
-  direction: "rtl" // Both here and <body dir="rtl">
+  direction: "ltr"
 });
 
 function AdminPanelEditDateTimeSlotDialog(props) {
+  const g_date = jalaali.toGregorian(
+    props.selected_date.year,
+    props.selected_date.month,
+    props.selected_date.day
+  );
+
   const [open, setOpen] = React.useState(true);
-
-  //   const handleClickOpen = () => {
-  //     setOpen(true);
-  //   };
-
+  const [beginTime, setBeginTime] = React.useState(
+    new Date(
+      `${g_date.gm} ${g_date.gd} ${g_date.gy} ${props.selected_date_time_slot.begin_time}`
+    )
+  );
+  const [endTime, setEndTime] = React.useState(
+    new Date(
+      `${g_date.gm} ${g_date.gd} ${g_date.gy} ${props.selected_date_time_slot.end_time}`
+    )
+  );
+  const [isReserved, setIsReserved] = React.useState(
+    props.selected_date_time_slot.isReserved
+  );
   const handleClose = () => {
+    props.close_edit_dialog();
     setOpen(false);
-    props.setShowEditDialog(false);
   };
-
-  const [editInfo, setEditInfo] = React.useState({
-    name: props.placeInfo.name,
-    capacity: props.placeInfo.capacity,
-    location: props.placeInfo.location
-  });
-
-  // console.log(editInfo);
-
   return (
     <div>
       <Dialog
@@ -56,27 +68,21 @@ function AdminPanelEditDateTimeSlotDialog(props) {
         aria-labelledby="form-dialog-title"
         dir="rtl"
       >
+        {console.log({
+          beginTime,
+          endTime
+        })}
         <DialogTitle style={{ textAlign: "right" }} id="form-dialog-title">
-          ویرایش مکان
+          اضافه کردن اسلات زمان
         </DialogTitle>
         <DialogContent>
           <StylesProvider jss={jss}>
             <ThemeProvider theme={theme}>
               <Formik
                 initialValues={{
-                  name: props.placeInfo.name,
-                  capacity: props.placeInfo.capacity,
-                  location: props.placeInfo.location
-                }}
-                validationSchema={Yup.object().shape({
-                  name: Yup.string().required("نام نمی تواند خالی باشد"),
-                  capacity: Yup.string().required("ظرفیت نمی تواند خالی باشد"),
-                  location: Yup.string().required(
-                    "موقعیت مکان نمیتواند خالی باشد"
-                  )
-                })}
-                onSubmit={(values, actions) => {
-                  console.log(values, actions);
+                  begin_time: "",
+                  end_time: "",
+                  isReserved: false
                 }}
                 render={formProps => (
                   <Form
@@ -86,46 +92,54 @@ function AdminPanelEditDateTimeSlotDialog(props) {
                     }}
                     noValidate
                   >
-                    {setEditInfo(
-                      formProps.values
-                    ) /* setting the editInfo Valeus*/}
-                    <Field
+                    {/* {console.log({
+                      begin_time: moment(beginTime).format("HH:mm"),
+                      end_time: moment(endTime).format("HH:mm"),
+                      isReserved
+                    })} */}
+                    <MuiPickersUtilsProvider utils={MomentUtils} locale="fa">
+                      <TimePicker
+                        clearable
+                        ampm={false}
+                        label="زمان شروع"
+                        value={beginTime}
+                        onChange={setBeginTime}
+                        style={{ display: "block", margin: "1em 0" }}
+                      />
+                    </MuiPickersUtilsProvider>
+                    <MuiPickersUtilsProvider utils={MomentUtils} locale="fa">
+                      <TimePicker
+                        clearable
+                        ampm={false}
+                        label="زمان پایان"
+                        value={endTime}
+                        onChange={setEndTime}
+                        style={{ display: "block", margin: "1em 0" }}
+                      />
+                    </MuiPickersUtilsProvider>
+                    <Typography
+                      component="label"
+                      variant="subtitle2"
+                      style={{ fontFamily: "Vazir", marginLeft: "1em" }}
+                    >
+                      رزرو
+                    </Typography>
+                    {/* <Field
                       variant="outlined"
                       margin="normal"
-                      required
-                      fullWidth
-                      id="name"
-                      label="نام مکان"
-                      name="name"
+                      name="isReserved"
+                      label="رزرو شده ؟"
+                      id="isReserved"
                       style={{ fontFamily: "Vazir" }}
-                      // autoComplete="email"
-                      // autoFocus
-                      component={TextField}
-                    />
-                    <Field
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="capacity"
-                      label="ظرفیت"
-                      id="capacity"
-                      style={{ fontFamily: "Vazir" }}
-                      type="number"
                       // autoComplete=""
-                      component={TextField}
-                    />
-                    <Field
-                      variant="outlined"
-                      margin="normal"
-                      required
-                      fullWidth
-                      name="location"
-                      label="موقعیت"
-                      id="location"
+                      component={CheckboxWithLabel}
+                    /> */}
+                    <FormControlLabel
                       style={{ fontFamily: "Vazir" }}
-                      // autoComplete=""
-                      component={TextField}
+                      value={isReserved}
+                      control={<Checkbox color="primary" />}
+                      onChange={e => setIsReserved(!isReserved)}
+                      // labelPlacement="start"
                     />
                   </Form>
                 )}
@@ -143,39 +157,68 @@ function AdminPanelEditDateTimeSlotDialog(props) {
           </Button>
           <Button
             style={{ fontFamily: "Vazir", fontSize: "1.5em" }}
-            onClick={async e => {
+            onClick={e => {
               const token = JSON.parse(localStorage.getItem("userInfo"))
                 .access_token;
               const headers = {
                 Authorization: `Bearer ${token}`
               };
+              const g_date = jalaali.toGregorian(
+                props.selected_date.year,
+                props.selected_date.month,
+                props.selected_date.day
+              );
               const submitInfo = {
-                ...editInfo,
-                department: props.department_id
+                date: `${g_date.gy}-${g_date.gm}-${g_date.gd}`,
+                begin_time: moment(beginTime).format("HH:mm"),
+                end_time: moment(endTime).format("HH:mm"),
+                isReserved,
+                place: props.selected_place.id
               };
+              // console.log(submitInfo);
               const url =
                 API_URL +
                 RESERVE_SYSTEM_URL +
-                `places/${props.department_id}/${props.placeID}/`;
-              await Axios.put(url, submitInfo, {
+                `places/${props.department_id}/${props.selected_place.id}/datetimeslots/${props.selected_date_time_slot.id}/`;
+              Axios.put(url, submitInfo, {
                 headers: headers
               })
                 .then(res => {
-                  toast.info("مکان مورد نظر ویرایش شد !", {
+                  // console.log(res.data);
+                  toast.info("اسلات مورد نظر ویرایش شد !", {
                     position: toast.POSITION.TOP_RIGHT
                   });
+
+                  const url =
+                    API_URL +
+                    `api/reserve-system/places/${props.department_id}/${props.selected_place.id}/datetimeslots/`;
+                  Axios.get(url, {
+                    params: {
+                      date: `${g_date.gy}-${g_date.gm}-${g_date.gd}`
+                    }
+                  })
+                    .then(res => {
+                      // console.log(res.data);
+                      //   this.setState({
+                      //     api_called: false
+                      //   });
+                      props.dispatch(setDateTimeSlots(res.data));
+                    })
+                    .catch(err => {
+                      console.log(err.response);
+                    });
                 })
                 .catch(err => {
-                  toast.error("خطا در ویرایش مکان مورد نظر !", {
+                  console.log(err.response);
+                  toast.error("خطا در ویرایش کردن اسلات مورد نظر !", {
                     position: toast.POSITION.TOP_RIGHT
                   });
                 });
-              props.callGetPlaces();
               handleClose();
             }}
             color="primary"
           >
-            ویرایش
+            اضافه کن
           </Button>
         </DialogActions>
       </Dialog>
@@ -186,4 +229,6 @@ const mapStateToProps = state => {
   return state;
 };
 
-export default connect(mapStateToProps)(withRouter(AdminPanelEditDateTimeSlotDialog));
+export default connect(mapStateToProps)(
+  withRouter(AdminPanelEditDateTimeSlotDialog)
+);
