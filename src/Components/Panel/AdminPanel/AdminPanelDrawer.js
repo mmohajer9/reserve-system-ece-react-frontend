@@ -36,7 +36,7 @@ import { connect } from "react-redux";
 import { toast } from "react-toastify";
 // import MakeDateTimeSlot from "./MakeDateTimeSlot";
 // import ChoosePlace from "./ChoosePlace";
-import ManageDateTimeSlotsTable from "./ManageDateTimeSlotsTable";
+import DateTimeSlotTable from "./DateTimeSlotTable";
 import ChooseDatePlace from "./ChooseDatePlace";
 
 const drawerWidth = 240;
@@ -226,7 +226,7 @@ function AdminPanelDrawer(props) {
               justify="center"
               alignItems="center"
             >
-              <ManageDateTimeSlotsTable />
+              <DateTimeSlotTable />
             </Grid>
           </Container>
         </Route>

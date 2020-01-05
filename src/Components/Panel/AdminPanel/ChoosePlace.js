@@ -6,7 +6,7 @@ import { API_URL } from "../../../Commons";
 import Axios from "axios";
 import {
   setSelectedPlace,
-  setSelectedDate,
+  // setSelectedDate,
   setDateTimeSlots
 } from "../../../Actions";
 import { connect } from "react-redux";
@@ -44,10 +44,6 @@ class ChoosePlace extends React.Component {
       });
   }
 
-  componentWillUnmount() {
-    this.props.dispatch(setSelectedPlace(""));
-    this.props.dispatch(setSelectedDate(""));
-  }
 
   render() {
     return (

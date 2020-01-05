@@ -1,5 +1,5 @@
 import React from "react";
-import MakeDateTimeSlot from "./MakeDateTimeSlot";
+import ChooseDate from "./ChooseDate";
 import ChoosePlace from "./ChoosePlace";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
@@ -10,7 +10,7 @@ import {
   setSelectedDate,
   setSelectedPlace
 } from "../../../Actions";
-let jalaali = require("jalaali-js");
+import jalaali from "jalaali-js";
 
 class ChooseDatePlace extends React.Component {
   state = {};
@@ -43,7 +43,7 @@ class ChooseDatePlace extends React.Component {
         }
       })
         .then(res => {
-          console.log(res.data);
+          // console.log(res.data);
           //   this.setState({
           //     api_called: false
           //   });
@@ -58,11 +58,12 @@ class ChooseDatePlace extends React.Component {
   componentWillUnmount() {
     this.props.dispatch(setSelectedDate(null));
     this.props.dispatch(setSelectedPlace(""));
+    this.props.dispatch(setDateTimeSlots([]));
   }
   render() {
     return (
       <>
-        <MakeDateTimeSlot />
+        <ChooseDate />
         <ChoosePlace />
       </>
     );

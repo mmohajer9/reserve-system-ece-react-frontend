@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import {
   createMuiTheme,
@@ -18,6 +19,17 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import { connect } from "react-redux";
+import moment from "jalali-moment";
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import IconButton from "@material-ui/core/IconButton";
+
+import FloatingAddButton from "./FloatingAddButton";
+
+import AdminPanelDeleteDateTimeSlotDialog from "./AdminPanelDeleteDateTimeSlotDialog";
+import AdminPanelEditDateTimeSlotDialog from "./AdminPanelEditDateTimeSlotDialog";
+import AdminPanelAddDateTimeSlotDialog from "./AdminPanelAddDateTimeSlotDialog";
+
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
 const theme = createMuiTheme({
@@ -27,7 +39,7 @@ const theme = createMuiTheme({
 //*--------------------------------------------------------------------
 
 const columns = [
-  { id: "id", label: "انتخاب", minWidth: 170, align: "center" },
+  { id: "id", label: "انتخاب ها", minWidth: 170, align: "center" },
   { id: "date", label: "تاریخ", minWidth: 100, align: "center" },
   {
     id: "begin_time",
@@ -59,7 +71,7 @@ const useStyles = makeStyles({
     fontFamily: "Vazir"
   },
   container: {
-    maxHeight: 440,
+    maxHeight: 500,
     fontFamily: "Vazir"
   }
 });
@@ -101,12 +113,35 @@ function StickyHeadTable(props) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
                 return (
-                  <TableRow style={{fontFamily : 'Vazir'}} hover role="checkbox" tabIndex={-1} key={index}>
-                    <TableCell style={{fontFamily : 'Vazir'}} align="center">{index + 1}</TableCell>
-                    <TableCell style={{fontFamily : 'Vazir'}} align="center">{row.date}</TableCell>
-                    <TableCell style={{fontFamily : 'Vazir'}} align="center">{row.begin_time}</TableCell>
-                    <TableCell style={{fontFamily : 'Vazir'}} align="center">{row.end_time}</TableCell>
-                    <TableCell style={{fontFamily : 'Vazir'}} align="center">{row.isReserved ? "رزرو شده" : "آزاد"}</TableCell>
+                  <TableRow
+                    style={{ fontFamily: "Vazir" }}
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={index}
+                  >
+                    <TableCell style={{ fontFamily: "Vazir" }} align="center">
+                      <IconButton color="primary">
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton color="secondary">
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Vazir" }} align="center">
+                      {moment(row.date, "YYYY/MM/DD")
+                        .locale("fa")
+                        .format("YYYY/MM/DD")}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Vazir" }} align="center">
+                      {row.begin_time}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Vazir" }} align="center">
+                      {row.end_time}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Vazir" }} align="center">
+                      {row.isReserved ? "رزرو شده" : "آزاد"}
+                    </TableCell>
                   </TableRow>
                 );
               })}
@@ -128,14 +163,63 @@ function StickyHeadTable(props) {
   );
 }
 
-class ManageDateTimeSlotsTable extends React.Component {
+class DateTimeSlotTable extends React.Component {
+  state = {
+    add_dialog_is_open: false,
+    edit_dialog_is_open: false,
+    delete_dialog_is_open: false
+  };
+
+  open_edit_dialog = e => {
+    this.setState({
+      edit_dialog_is_open: true
+    });
+  };
+  close_edit_dialog = e => {
+    this.setState({
+      edit_dialog_is_open: false
+    });
+  };
+  open_delete_dialog = e => {
+    this.setState({
+      delete_dialog_is_open: true
+    });
+  };
+  close_delete_dialog = e => {
+    this.setState({
+      delete_dialog_is_open: false
+    });
+  };
+  open_add_dialog = e => {
+    this.setState({
+      add_dialog_is_open: true
+    });
+  };
+  close_add_dialog = e => {
+    this.setState({
+      add_dialog_is_open: false
+    });
+  };
+
   render() {
-    console.log(this.props);
     return (
       <StylesProvider jss={jss}>
         <ThemeProvider theme={theme}>
           <div dir="rtl">
+            {this.state.add_dialog_is_open ? (
+              <AdminPanelAddDateTimeSlotDialog
+                close_add_dialog={this.close_add_dialog}
+              />
+            ) : this.state.edit_dialog_is_open ? (
+              <AdminPanelEditDateTimeSlotDialog />
+            ) : this.state.delete_dialog_is_open ? (
+              <AdminPanelDeleteDateTimeSlotDialog />
+            ) : null}
+
             <StickyHeadTable rows={this.props.date_time_slots} />
+            <FloatingAddButton
+              open_add_dialog={this.open_add_dialog}
+            />
           </div>
         </ThemeProvider>
       </StylesProvider>
@@ -147,4 +231,4 @@ const mapStateToProps = state => {
   return state;
 };
 
-export default connect(mapStateToProps)(ManageDateTimeSlotsTable);
+export default connect(mapStateToProps)(DateTimeSlotTable);

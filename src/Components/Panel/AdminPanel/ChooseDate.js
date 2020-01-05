@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
-import { Calendar } from "react-modern-calendar-datepicker";
+// import { Calendar } from "react-modern-calendar-datepicker";
 import DatePicker from "react-modern-calendar-datepicker";
 
-import "./MakeDateTimeSlot.css";
+import "./ChooseDate.css";
 import { connect } from "react-redux";
 import { setSelectedDate } from "../../../Actions";
 
-function MakeDateTimeSlot(props) {
+function ChooseDate(props) {
   const [selectedDay, setSelectedDay] = useState(null);
   props.dispatch(setSelectedDate(selectedDay));
 
@@ -32,4 +32,4 @@ const mapStateToProps = state => {
   return state;
 };
 
-export default connect(mapStateToProps)(MakeDateTimeSlot);
+export default connect(mapStateToProps)(ChooseDate);
