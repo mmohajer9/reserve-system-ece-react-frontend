@@ -75,7 +75,7 @@ class PlaceListForDepartment(ListCreateAPIView):
 
 class PlaceDetailForDepartment(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
-        return Place.objects.filter(department__id = self.kwargs["dept_id"] , pk = self.kwargs["pk"])
+        return Place.objects.filter(department__id = self.kwargs["dept_id"])
         #? dont use objects.get because it should return a list with filter that is "queryset"
     
     serializer_class = PlaceDetailSerializer
@@ -97,7 +97,7 @@ class MemberDetailByUserID(RetrieveUpdateDestroyAPIView):
 
     lookup_field = "user__id"    
     serializer_class = MemberSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [isAdminOrReadOnly]
 
 class MemberDetailByUserUsername(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
@@ -105,7 +105,7 @@ class MemberDetailByUserUsername(RetrieveUpdateDestroyAPIView):
         
     lookup_field = "user__username"
     serializer_class = MemberSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [isAdminOrReadOnly]
 
 
 
@@ -114,11 +114,19 @@ class PlaceDateTimeSlotList(ListCreateAPIView):
         if self.request.method == "GET":
             date = self.request.GET.get('date')
             if date:
-                return DateTimeSlot.objects.filter(place = self.kwargs["pk"] , date = date)
+                return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"], date = date)
             else:
-                return DateTimeSlot.objects.filter(place = self.kwargs["pk"])
+                return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"])
         else:
-            return DateTimeSlot.objects.filter(place = self.kwargs["pk"])
+            return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"])
         
+    serializer_class = DateTimeSlotSerializer
+    permission_classes = [isAdminOrReadOnly]
+
+
+class PlaceDateTimeSlotDetail(RetrieveUpdateDestroyAPIView):
+    def get_queryset(self):
+        return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"])
+
     serializer_class = DateTimeSlotSerializer
     permission_classes = [isAdminOrReadOnly]

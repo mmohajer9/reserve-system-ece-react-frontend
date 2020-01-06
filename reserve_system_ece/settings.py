@@ -62,7 +62,8 @@ OAUTH2_PROVIDER = {
         'groups': 'Access to your groups',
     },
     #age in OAUTH2_BACKEND_CLASS ro nazari bayad bejaye "application/json bayad" in -->  "application/x-www-form-urlencoded" ro bzari
-    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',                                                                                                          
+    'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore',   
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 60 * 60 * 100,                                                                                                   
 
 }
 
