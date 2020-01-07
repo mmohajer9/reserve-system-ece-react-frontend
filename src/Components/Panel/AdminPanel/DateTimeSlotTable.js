@@ -153,7 +153,7 @@ function StickyHeadTable(props) {
                       {row.end_time}
                     </TableCell>
                     <TableCell style={{ fontFamily: "Vazir" }} align="center">
-                      {row.isReserved ? "رزرو شده" : "آزاد"}
+                      {row.reservation !== null ? "رزرو شده" : "آزاد"}
                     </TableCell>
                   </TableRow>
                 );

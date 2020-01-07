@@ -25,7 +25,7 @@ import { withRouter } from "react-router";
 import { API_URL, RESERVE_SYSTEM_URL } from "../../../Commons";
 import { toast } from "react-toastify";
 import Axios from "axios";
-import { Typography, FormControlLabel, Checkbox } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import jalaali from "jalaali-js";
 import { setDateTimeSlots } from "../../../Actions";
 
@@ -39,7 +39,6 @@ function AdminPanelAddDateTimeSlotDialog(props) {
   const [open, setOpen] = React.useState(true);
   const [beginTime, setBeginTime] = React.useState(new Date());
   const [endTime, setEndTime] = React.useState(new Date());
-  const [isReserved, setIsReserved] = React.useState(false);
 
   const handleClose = () => {
     props.close_add_dialog();
@@ -115,13 +114,13 @@ function AdminPanelAddDateTimeSlotDialog(props) {
                       // autoComplete=""
                       component={CheckboxWithLabel}
                     /> */}
-                    <FormControlLabel
+                    {/* <FormControlLabel
                       style={{ fontFamily: "Vazir" }}
                       value={isReserved}
                       control={<Checkbox color="primary" />}
                       onChange={e => setIsReserved(!isReserved)}
                       // labelPlacement="start"
-                    />
+                    /> */}
                   </Form>
                 )}
               />
@@ -153,7 +152,6 @@ function AdminPanelAddDateTimeSlotDialog(props) {
                 date: `${g_date.gy}-${g_date.gm}-${g_date.gd}`,
                 begin_time: moment(beginTime).format("HH:mm"),
                 end_time: moment(endTime).format("HH:mm"),
-                isReserved,
                 place: props.selected_place.id
               };
               // console.log(submitInfo);

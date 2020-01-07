@@ -25,7 +25,6 @@ import { withRouter } from "react-router";
 import { API_URL, RESERVE_SYSTEM_URL } from "../../../Commons";
 import { toast } from "react-toastify";
 import Axios from "axios";
-import { Typography, FormControlLabel, Checkbox } from "@material-ui/core";
 import jalaali from "jalaali-js";
 import { setDateTimeSlots } from "../../../Actions";
 
@@ -53,9 +52,7 @@ function AdminPanelEditDateTimeSlotDialog(props) {
       `${g_date.gm} ${g_date.gd} ${g_date.gy} ${props.selected_date_time_slot.end_time}`
     )
   );
-  const [isReserved, setIsReserved] = React.useState(
-    props.selected_date_time_slot.isReserved
-  );
+
   const handleClose = () => {
     props.close_edit_dialog();
     setOpen(false);
@@ -117,13 +114,13 @@ function AdminPanelEditDateTimeSlotDialog(props) {
                         style={{ display: "block", margin: "1em 0" }}
                       />
                     </MuiPickersUtilsProvider>
-                    <Typography
+                    {/* <Typography
                       component="label"
                       variant="subtitle2"
                       style={{ fontFamily: "Vazir", marginLeft: "1em" }}
                     >
                       رزرو
-                    </Typography>
+                    </Typography> */}
                     {/* <Field
                       variant="outlined"
                       margin="normal"
@@ -134,13 +131,13 @@ function AdminPanelEditDateTimeSlotDialog(props) {
                       // autoComplete=""
                       component={CheckboxWithLabel}
                     /> */}
-                    <FormControlLabel
+                    {/* <FormControlLabel
                       style={{ fontFamily: "Vazir" }}
                       value={isReserved}
                       control={<Checkbox color="primary" />}
                       onChange={e => setIsReserved(!isReserved)}
                       // labelPlacement="start"
-                    />
+                    /> */}
                   </Form>
                 )}
               />
@@ -172,7 +169,6 @@ function AdminPanelEditDateTimeSlotDialog(props) {
                 date: `${g_date.gy}-${g_date.gm}-${g_date.gd}`,
                 begin_time: moment(beginTime).format("HH:mm"),
                 end_time: moment(endTime).format("HH:mm"),
-                isReserved,
                 place: props.selected_place.id
               };
               // console.log(submitInfo);
@@ -218,7 +214,7 @@ function AdminPanelEditDateTimeSlotDialog(props) {
             }}
             color="primary"
           >
-            اضافه کن
+            ویرایش کن
           </Button>
         </DialogActions>
       </Dialog>
