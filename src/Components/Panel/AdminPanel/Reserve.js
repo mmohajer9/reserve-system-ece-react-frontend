@@ -21,16 +21,11 @@ import TableRow from "@material-ui/core/TableRow";
 import { connect } from "react-redux";
 import moment from "jalali-moment";
 import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
-
-import FloatingAddButton from "./FloatingAddButton";
-
-import AdminPanelDeleteDateTimeSlotDialog from "./AdminPanelDeleteDateTimeSlotDialog";
-import AdminPanelEditDateTimeSlotDialog from "./AdminPanelEditDateTimeSlotDialog";
-import AdminPanelAddDateTimeSlotDialog from "./AdminPanelAddDateTimeSlotDialog";
+import AddCircleOutlineIcon from "@material-ui/icons/AddCircleOutline";
 import { setSelectedDateTimeSlot } from "../../../Actions";
-
+import AddReservationDialog from "./AddReservationDialog";
+import NotInterestedIcon from "@material-ui/icons/NotInterested";
 const jss = create({ plugins: [...jssPreset().plugins, rtl()] });
 
 const theme = createMuiTheme({
@@ -58,8 +53,8 @@ const columns = [
   },
 
   {
-    id: "description",
-    label: "توضیحات",
+    id: "status",
+    label: "وضعیت",
     minWidth: 170,
     align: "center",
     format: value => value.toLocaleString()
@@ -122,24 +117,19 @@ function StickyHeadTable(props) {
                     key={index}
                   >
                     <TableCell style={{ fontFamily: "Vazir" }} align="center">
-                      <IconButton
-                        onClick={e => {
-                          props.dispatch(setSelectedDateTimeSlot(row));
-                          props.open_edit_dialog();
-                        }}
-                        color="primary"
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
-                        onClick={e => {
-                          props.dispatch(setSelectedDateTimeSlot(row));
-                          props.open_delete_dialog();
-                        }}
-                        color="secondary"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      {row.reservation !== null ? (
+                        <NotInterestedIcon color="secondary" />
+                      ) : (
+                        <IconButton
+                          onClick={e => {
+                            props.dispatch(setSelectedDateTimeSlot(row));
+                            props.open_reserve_dialog();
+                          }}
+                          color="primary"
+                        >
+                          <AddCircleOutlineIcon />
+                        </IconButton>
+                      )}
                     </TableCell>
                     <TableCell style={{ fontFamily: "Vazir" }} align="center">
                       {moment(row.date, "YYYY/MM/DD")
@@ -176,45 +166,23 @@ function StickyHeadTable(props) {
   );
 }
 
-class ReservationTable extends React.Component {
+class Reserve extends React.Component {
   state = {
-    add_dialog_is_open: false,
-    edit_dialog_is_open: false,
-    delete_dialog_is_open: false
+    reserve_dialog_is_open: false
   };
 
   componentWillUnmount() {
     this.props.dispatch(setSelectedDateTimeSlot(""));
   }
 
-  open_edit_dialog = e => {
+  open_reserve_dialog = e => {
     this.setState({
-      edit_dialog_is_open: true
+      reserve_dialog_is_open: true
     });
   };
-  close_edit_dialog = e => {
+  close_reserve_dialog = e => {
     this.setState({
-      edit_dialog_is_open: false
-    });
-  };
-  open_delete_dialog = e => {
-    this.setState({
-      delete_dialog_is_open: true
-    });
-  };
-  close_delete_dialog = e => {
-    this.setState({
-      delete_dialog_is_open: false
-    });
-  };
-  open_add_dialog = e => {
-    this.setState({
-      add_dialog_is_open: true
-    });
-  };
-  close_add_dialog = e => {
-    this.setState({
-      add_dialog_is_open: false
+      reserve_dialog_is_open: false
     });
   };
 
@@ -223,27 +191,17 @@ class ReservationTable extends React.Component {
       <StylesProvider jss={jss}>
         <ThemeProvider theme={theme}>
           <div dir="rtl">
-            {this.state.add_dialog_is_open ? (
-              <AdminPanelAddDateTimeSlotDialog
-                close_add_dialog={this.close_add_dialog}
-              />
-            ) : this.state.edit_dialog_is_open ? (
-              <AdminPanelEditDateTimeSlotDialog
-                close_edit_dialog={this.close_edit_dialog}
-              />
-            ) : this.state.delete_dialog_is_open ? (
-              <AdminPanelDeleteDateTimeSlotDialog
-                close_delete_dialog={this.close_delete_dialog}
+            {this.state.reserve_dialog_is_open ? (
+              <AddReservationDialog
+                close_reserve_dialog={this.close_reserve_dialog}
               />
             ) : null}
 
             <StickyHeadTable
-              open_delete_dialog={this.open_delete_dialog}
-              open_edit_dialog={this.open_edit_dialog}
+              open_reserve_dialog={this.open_reserve_dialog}
               rows={this.props.date_time_slots}
               dispatch={this.props.dispatch}
             />
-            <FloatingAddButton open_add_dialog={this.open_add_dialog} />
           </div>
         </ThemeProvider>
       </StylesProvider>
@@ -255,4 +213,4 @@ const mapStateToProps = state => {
   return state;
 };
 
-export default connect(mapStateToProps)(ReservationTable);
+export default connect(mapStateToProps)(Reserve);
