@@ -161,10 +161,10 @@ class ReservationList(ListCreateAPIView):
                     return Reservation.objects.filter(slot__place = place_id, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
 
                 if (date) and (place_id):                
-                    return Reservation.objects.all(slot__place = place_id , slot__date = date, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
+                    return Reservation.objects.filter(slot__place = place_id , slot__date = date, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
 
                 if (not date) and (not place_id):                
-                    return Reservation.objects.all(slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time') 
+                    return Reservation.objects.filter(slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time') 
 
     serializer_class = ReservationSerializer
     permission_classes = [AllowAny]
