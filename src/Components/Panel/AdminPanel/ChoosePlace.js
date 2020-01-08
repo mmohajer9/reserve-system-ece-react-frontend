@@ -7,7 +7,8 @@ import Axios from "axios";
 import {
   setSelectedPlace,
   // setSelectedDate,
-  setDateTimeSlots
+  setDateTimeSlots,
+  setReservations
 } from "../../../Actions";
 import { connect } from "react-redux";
 import {
@@ -69,6 +70,7 @@ class ChoosePlace extends React.Component {
               } else {
                 this.props.dispatch(setSelectedPlace(""));
                 this.props.dispatch(setDateTimeSlots([]));
+                this.props.dispatch(setReservations([]));
               }
             }}
           />

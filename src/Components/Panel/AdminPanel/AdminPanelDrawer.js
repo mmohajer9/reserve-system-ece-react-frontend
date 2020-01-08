@@ -38,6 +38,7 @@ import { toast } from "react-toastify";
 // import ChoosePlace from "./ChoosePlace";
 import DateTimeSlotTable from "./DateTimeSlotTable";
 import ChooseDatePlace from "./ChooseDatePlace";
+import Reservations from "./Reservations";
 
 const drawerWidth = 240;
 
@@ -197,10 +198,14 @@ function AdminPanelDrawer(props) {
       >
         <div className={classes.drawerHeader} />
         <Route exact path="/panel/admin/reserve">
-          <Typography paragraph>THIS IS Reserve</Typography>
+          <Container maxWidth="md">
+            <Reservations reserve={true} />
+          </Container>
         </Route>
         <Route exact path="/panel/admin/reservations">
-          <Typography paragraph>THIS IS My Reservatons</Typography>
+          <Container maxWidth="md">
+            <Reservations reserve={false} />
+          </Container>
         </Route>
         <Route exact path="/panel/admin/select-university">
           <ChooseUniversity />

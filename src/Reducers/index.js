@@ -16,16 +16,30 @@ const initState = {
   selected_place: "",
   selected_date: "",
   date_time_slots: [],
-  selected_date_time_slot: ""
+  selected_date_time_slot: "",
+  reservations: [],
+  selected_reservation: ""
 };
 
 const reducer = (state = initState, action) => {
   switch (action.type) {
+    case "SET_SELECTED_RESERVATION":
+      return {
+        ...state,
+        selected_reservation : action.selected_reservation
+      }
+
+    case "SET_RESERVATIONS":
+      return {
+        ...state,
+        reservations: action.reservations
+      };
+
     case "SET_SELECTED_DATE_TIME_SLOT":
-        return {
-          ...state,
-          selected_date_time_slot: action.selected_date_time_slot
-        }
+      return {
+        ...state,
+        selected_date_time_slot: action.selected_date_time_slot
+      };
     case "SET_DATE_TIME_SLOTS":
       return {
         ...state,

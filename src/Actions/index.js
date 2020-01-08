@@ -76,3 +76,18 @@ export const setSelectedDateTimeSlot = selected_date_time_slot => {
     selected_date_time_slot: selected_date_time_slot
   };
 };
+
+export const setReservations = reservations => {
+  return {
+    type: "SET_RESERVATIONS",
+    reservations: reservations
+  };
+};
+
+export const setSelectedReservation = selected_reservation => {
+  return {
+    type: "SET_SELECTED_RESERVATION",
+    selected_reservation: selected_reservation
+  };
+};
+

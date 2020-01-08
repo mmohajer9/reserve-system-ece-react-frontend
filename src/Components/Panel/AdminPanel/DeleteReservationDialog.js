@@ -1,0 +1,186 @@
+import React from "react";
+import Button from "@material-ui/core/Button";
+// import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+// import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import { Avatar, DialogContentText } from "@material-ui/core";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
+import Axios from "axios";
+import { API_URL, RESERVE_SYSTEM_URL } from "../../../Commons";
+import { toast } from "react-toastify";
+import {setReservations } from "../../../Actions";
+import jalaali from "jalaali-js";
+
+function DeleteReservationDialog(props) {
+  const [open, setOpen] = React.useState(true);
+
+  const handleClose = () => {
+    props.close_delete_dialog();
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        dir="rtl"
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogTitle style={{ textAlign: "center" }} id="form-dialog-title">
+          حذف رزرو
+        </DialogTitle>
+        <DialogContent>
+          <Avatar
+            style={{
+              margin: "1em auto",
+              backgroundColor: "red",
+              padding: "2.5em"
+            }}
+          >
+            <DeleteForeverIcon style={{ fontSize: "3em" }} fontSize="large" />
+          </Avatar>
+          <DialogContentText style={{ margin: "2em 0" }}>
+            آیا مطمئن هستید که میخواهید این رزرو را حذف کنید ؟
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            style={{ fontFamily: "Vazir", fontSize: "1.5em" }}
+            onClick={handleClose}
+            color="primary"
+          >
+            لغو
+          </Button>
+          <Button
+            style={{ fontFamily: "Vazir", fontSize: "1.5em" }}
+            onClick={e => {
+              const token = JSON.parse(localStorage.getItem("userInfo"))
+                .access_token;
+              const headers = {
+                Authorization: `Bearer ${token}`
+              };
+              const url =
+                API_URL +
+                RESERVE_SYSTEM_URL +
+                `reservations/${props.selected_reservation.id}`;
+              Axios.delete(url, {
+                headers: headers
+              }).then(res => {
+                toast.info("رزرو مورد نظر خذف شد !", {
+                  position: toast.POSITION.TOP_RIGHT
+                });
+
+                if (
+                  props.selected_date !== null &&
+                  props.selected_place !== ""
+                ) {
+                  const g_date = jalaali.toGregorian(
+                    props.selected_date.year,
+                    props.selected_date.month,
+                    props.selected_date.day
+                  );
+                  // console.log(g_date);
+                  const url =
+                    API_URL +
+                    `api/reserve-system/reservations/list/${props.department_id}/`;
+                  Axios.get(url, {
+                    params: {
+                      date: `${g_date.gy}-${g_date.gm}-${g_date.gd}`,
+                      place_id: props.selected_place.id,
+                      member_id: props.member_pk
+                    }
+                  })
+                    .then(res => {
+                      // console.log(res.data);
+                      props.dispatch(setReservations(res.data));
+                    })
+                    .catch(err => {
+                      console.log(err.response);
+                    });
+                } else if (
+                  props.selected_date === null &&
+                  props.selected_place !== ""
+                ) {
+                  const url =
+                    API_URL +
+                    `api/reserve-system/reservations/list/${props.department_id}/`;
+                  Axios.get(url, {
+                    params: {
+                      place_id: props.selected_place.id,
+                      member_id: props.member_pk
+                    }
+                  })
+                    .then(res => {
+                      // console.log(res.data);
+                      props.dispatch(setReservations(res.data));
+                    })
+                    .catch(err => {
+                      console.log(err.response);
+                    });
+                } else if (
+                  props.selected_date !== null &&
+                  props.selected_place === ""
+                ) {
+                  const g_date = jalaali.toGregorian(
+                    props.selected_date.year,
+                    props.selected_date.month,
+                    props.selected_date.day
+                  );
+                  const url =
+                    API_URL +
+                    `api/reserve-system/reservations/list/${props.department_id}/`;
+                  Axios.get(url, {
+                    params: {
+                      date: `${g_date.gy}-${g_date.gm}-${g_date.gd}`,
+
+                      member_id: props.member_pk
+                    }
+                  })
+                    .then(res => {
+                      // console.log(res.data);
+                      props.dispatch(setReservations(res.data));
+                    })
+                    .catch(err => {
+                      console.log(err.response);
+                    });
+                } else {
+                  const url =
+                    API_URL +
+                    `api/reserve-system/reservations/list/${props.department_id}/`;
+                  Axios.get(url, {
+                    params: {
+                      member_id: props.member_pk
+                    }
+                  })
+                    .then(res => {
+                      // console.log(res.data);
+                      props.dispatch(setReservations(res.data));
+                    })
+                    .catch(err => {
+                      console.log(err.response);
+                    });
+                }
+              });
+              handleClose();
+            }}
+            color="primary"
+          >
+            تایید
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+}
+
+const mapStateToProps = state => {
+  return state;
+};
+
+export default connect(mapStateToProps)(withRouter(DeleteReservationDialog));
