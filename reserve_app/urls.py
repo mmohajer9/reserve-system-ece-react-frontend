@@ -21,12 +21,16 @@ urlpatterns = [
     path("departments/", DepartmentListForIUT.as_view(), name="department_list"), #default
     path("departments/<int:uni_id>/", DepartmentListForUniversity.as_view(), name="department_list"),
     
-    #? place apis
+    #? place api
     path("places/<int:dept_id>/" ,PlaceListForDepartment.as_view() , name="place_list"),
     path("places/<int:dept_id>/<int:pk>/" ,PlaceDetailForDepartment.as_view() , name="place_detail"),
 
-    #? date time slot apis
+    #? date time slot api
     path("places/<int:dept_id>/<int:place_id>/datetimeslots/" , PlaceDateTimeSlotList.as_view() , name="place_datetime_slot_list"),
     path("places/<int:dept_id>/<int:place_id>/datetimeslots/<int:pk>/" , PlaceDateTimeSlotDetail.as_view() , name="place_datetime_slot_detail"),
 
+    #? reservation api
+    path("reservations/list/<int:dept_id>/", ReservationList.as_view(), name="reservation_list"),
+    path("reservations/<int:pk>/" , ReservationDetail.as_view() , name="reservation_detail")
+    
 ]

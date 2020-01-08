@@ -63,9 +63,45 @@ class MemberSerializer(ModelSerializer):
         depth = 2
 
 
-class DateTimeSlotSerializer(ModelSerializer):
+class ReservationSerializer(ModelSerializer):
 
+    begin_time = SerializerMethodField()
+    end_time = SerializerMethodField()
+    date = SerializerMethodField()
+    place = SerializerMethodField()
+    class Meta:
+        model = Reservation
+        fields = [
+            'id',
+            'description',
+            'member',
+            'slot',
+            'begin_time',
+            'end_time',
+            'date',
+            'place'
+        ]
+
+    def get_begin_time(self , obj):
+        return obj.slot.begin_time
+    def get_end_time(self , obj):
+        return obj.slot.end_time
+    def get_date(self , obj):
+        return obj.slot.date
+    def get_place(self , obj):
+        return obj.slot.place.name
+
+
+class DateTimeSlotSerializer(ModelSerializer):
+    reservation = ReservationSerializer(read_only = True)
     class Meta:
         model = DateTimeSlot
-        fields = '__all__'
+        fields = [
+            'id',
+            'date',
+            'begin_time',
+            'end_time',
+            'place',
+            'reservation'
+        ]
         

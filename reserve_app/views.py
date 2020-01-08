@@ -114,11 +114,11 @@ class PlaceDateTimeSlotList(ListCreateAPIView):
         if self.request.method == "GET":
             date = self.request.GET.get('date')
             if date:
-                return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"], date = date)
+                return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"], date = date).order_by('begin_time')
             else:
-                return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"])
+                return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"]).order_by('begin_time')
         else:
-            return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"])
+            return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"]).order_by('begin_time')
         
     serializer_class = DateTimeSlotSerializer
     permission_classes = [isAdminOrReadOnly]
@@ -129,4 +129,52 @@ class PlaceDateTimeSlotDetail(RetrieveUpdateDestroyAPIView):
         return DateTimeSlot.objects.filter(place = self.kwargs["place_id"] , place__department = self.kwargs["dept_id"])
 
     serializer_class = DateTimeSlotSerializer
+    permission_classes = [isAdminOrReadOnly]
+
+
+
+class ReservationList(ListCreateAPIView):
+
+    def get_queryset(self):
+        if self.request.method == 'GET':
+
+            place_id = self.request.GET.get('place_id')
+            date = self.request.GET.get('date')
+            member_id = self.request.GET.get('member_id')
+            if member_id:
+                if (date) and (not place_id):
+                    return Reservation.objects.filter(slot__date = date , member = member_id , slot__place__department = self.kwargs["dept_id"]).order_by('slot__date' , 'slot__begin_time')
+                    
+                if (not date) and (place_id):
+                    return Reservation.objects.filter(slot__place = place_id, member = member_id, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
+
+                if (date) and (place_id):                
+                    return Reservation.objects.filter(slot__place = place_id , slot__date = date, member = member_id, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
+
+                if (not date) and (not place_id):                
+                    return Reservation.objects.filter(member = member_id, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
+            else:
+                if (date) and (not place_id):
+                    return Reservation.objects.filter(slot__date = date, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
+                    
+                if (not date) and (place_id):
+                    return Reservation.objects.filter(slot__place = place_id, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
+
+                if (date) and (place_id):                
+                    return Reservation.objects.all(slot__place = place_id , slot__date = date, slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time')
+
+                if (not date) and (not place_id):                
+                    return Reservation.objects.all(slot__place__department = self.kwargs["dept_id"]).order_by('slot__date', 'slot__begin_time') 
+
+    serializer_class = ReservationSerializer
+    permission_classes = [AllowAny]
+    
+
+class ReservationDetail(RetrieveUpdateDestroyAPIView):
+
+    def get_queryset(self):
+        return Reservation.objects.filter(pk = self.kwargs['pk'])
+    
+
+    serializer_class = ReservationSerializer
     permission_classes = [isAdminOrReadOnly]

@@ -85,7 +85,6 @@ class DateTimeSlot(models.Model):
     begin_time = models.TimeField(blank=True, null=True)
     end_time = models.TimeField(blank=True, null=True)
     place = models.ForeignKey(Place, related_name='related_datetimeslots', on_delete=models.CASCADE)
-    isReserved = models.BooleanField(default= False)
     # class Meta:
     #     db_table = ''
     #     managed = True
@@ -95,18 +94,19 @@ class DateTimeSlot(models.Model):
         unique_together = ('date' ,'begin_time' , 'end_time', 'place',)    
     
     def __str__(self):
-        return str(self.date) + ' : ' + str(self.begin_time) + ' - ' + str(self.end_time) + ' : ' +  str(self.place) + (' - Reserved' if self.isReserved else ' - Free')
+        return str(self.date) + ' : ' + str(self.begin_time) + ' - ' + str(self.end_time) + ' : ' +  str(self.place)
     
 
 
 class Reservation(models.Model):
 
     member = models.ForeignKey(Member, related_name='reserved_places', on_delete=models.CASCADE)
-    slot = models.ForeignKey(DateTimeSlot, related_name='reservations_on_this_datetimeslot', on_delete=models.CASCADE)
-    desciption = models.CharField(max_length=150,blank=True, null=True)
+    slot = models.OneToOneField(DateTimeSlot, on_delete=models.CASCADE)
+    description = models.CharField(max_length=150,blank=True, null=True)
     
     def __str__(self):
-        return str(self.member) + ' : ' + str(self.desciption)
+        return str(self.member) + ' : ' + str(self.description)
+
 
     # class Meta:
     #     db_table = ''
