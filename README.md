@@ -20,7 +20,7 @@ The following technologies are needed for the technologies this project:
 ### Built With
 
 * [Django Web Framework](https://www.djangoproject.com/) - Back End Framework
-* [React.js](https://reactjs.org/) - Front End Framework
+* [React.js](https://reactjs.org/) - Front End Library
 * [Material-UI](https://material-ui.com/) - UI Framework
 
 
